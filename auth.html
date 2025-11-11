@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso / Registro - Stake Clone</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilos específicos de la página de autenticación */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .auth-card {
+            background-color: var(--bg-medium);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            width: 400px;
+            text-align: center;
+        }
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #333;
+        }
+        .auth-tabs button {
+            flex: 1;
+            padding: 15px 10px;
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        .auth-tabs button.active {
+            color: var(--accent-green);
+            border-bottom-color: var(--accent-green);
+        }
+        .auth-tabs button:hover:not(.active) {
+            color: var(--text-light);
+        }
+        
+        .auth-form-container {
+            position: relative;
+            height: 300px; /* Altura fija para evitar saltos de layout */
+            overflow: hidden;
+        }
+        .auth-form {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .auth-form.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateX(0);
+        }
+        /* Mover el formulario inactivo a la derecha */
+        #login-form:not(.active) { transform: translateX(-100%); }
+        #register-form:not(.active) { transform: translateX(100%); }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--bg-dark);
+            border: 1px solid #333;
+            color: var(--text-light);
+            border-radius: 6px;
+        }
+        .auth-submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent-green);
+            color: var(--bg-dark);
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background-color 0.2s;
+        }
+        .auth-submit-btn:hover {
+            background-color: #00d200;
+        }
+        .back-link {
+            margin-top: 25px;
+            font-size: 13px;
+        }
+        .back-link a {
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="auth-card">
+        <div class="auth-tabs">
+            <button id="tab-login" class="active">Iniciar Sesión</button>
+            <button id="tab-register">Registrarse</button>
+        </div>
+
+        <div class="auth-form-container">
+            
+            <form id="login-form" class="auth-form active">
+                <div class="input-group">
+                    <label for="login-username">Usuario</label>
+                    <input type="text" id="login-username" required>
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Contraseña</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="auth-submit-btn">Ingresar</button>
+            </form>
+            
+            <form id="register-form" class="auth-form">
+                <div class="input-group">
+                    <label for="reg-username">Usuario</label>
+                    <input type="text" id="reg-username" required>
+                </div>
+                <div class="input-group">
+                    <label for="reg-email">Correo Electrónico</label>
+                    <input type="email" id="reg-email" required>
+                </div>
+                <div class="input-group">
+                    <label for="reg-password">Contraseña</label>
+                    <input type="password" id="reg-password" required>
+                </div>
+                <div class="input-group">
+                    <label for="reg-dni">DNI</label>
+                    <input type="text" id="reg-dni" required>
+                </div>
+                <button type="submit" class="auth-submit-btn">Registrarse y Obtener Bono</button>
+            </form>
+        </div>
+        
+        <div class="back-link">
+            <a href="index.html">Volver al Casino</a>
+        </div>
+    </div>
+    
+    <script src="auth.js"></script>
+</body>
+</html>

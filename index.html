@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bet614</title>
+    <link rel="icon" type="image/png" href="img/logop.png">
+    <link rel="icon" type="image/x-icon" href="img/logop.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <img src="img/logo.png" alt="Ícono de Promoción" class="logo">
+            <nav class="nav-menu">
+                
+                <a href="#" class="nav-item active">💰 <span>Promociones</span></a>
+                <a href="#" class="nav-item">🔗 <span>Afiliado</span></a>
+                <a href="#" class="nav-item">💎 <span>Club VIP</span></a>
+                <a href="#" class="nav-item">💬 <span>Foro</span></a>
+                <a href="#" class="nav-item separator"></a>
+                <a href="#" class="nav-item">🤝 <span>Patrocinios</span></a>
+                <a href="#" class="nav-item">🔞 <span>Juego Responsable</span></a>
+                <a href="#" class="nav-item">📞 <span>Soporte en vivo</span></a>
+                <a href="#" class="nav-item">🌐 <span>Idioma: Español</span></a>
+            </nav>
+        </aside>
+
+        <button class="sidebar-toggle-btn" id="sidebar-toggle">
+            &lt; 
+        </button>
+
+        <main class="main-content">
+            <header class="app-header">
+                <div class="nav-tabs">
+                    <button class="tab-btn active" data-tab="casino">Casino</button>
+                    <button class="tab-btn" data-tab="deportes">Deportes</button>
+                </div>
+                <div class="account-info">
+                    <div id="logged-in-state" style="display: none;" class="auth-state">
+                    <div id="monedero-valor" class="balance-display"></div>
+                    <button class="deposit-btn">Monedero</button>
+                    <div class="user-dropdown-container">
+                        <div class="user-icon">👤</div>
+                        <button id="logout-btn" class="auth-btn logout-btn">Cerrar Sesión</button>
+                    </div>
+                </div>
+
+                <div id="logged-out-state" class="auth-state">
+                    <a href="auth.html" class="auth-btn login-btn">Iniciar Sesión</a>
+                    <a href="auth.html" class="auth-btn register-btn-ui">Registrarse</a>
+                </div>
+            </div>        
+
+            </header>
+            
+        <div class="main-banner-section">
+            <div class="user-profile-sidebar">
+                <div class="user-avatar">👤</div> 
+                <span class="username">Usuario123</span>
+            </div>
+            <div class="promo-banner" id="promo-banner">
+                <div class="banner-content">
+                    
+                    <h2>🎰 Si eres Usuario Nuevo 🎰</h2>
+                    <h3>Regístrate y Obtené BONUS $15.000</h3>
+                    <a href="auth.html" class="register-btn">Regístrate ahora</a>
+                </div>
+                </div>
+        </div>
+
+            <section class="app-body">
+                
+                <div class="game-section">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Busca tu Juego" class="search-input">
+                    </div>
+
+                    <h3>Explorar por Categoría</h3>
+                    <div class="category-filter-list">
+                        <button class="filter-btn active" data-filter="all">Todas</button>
+                        <button class="filter-btn" data-filter="slots">Slots</button>
+                        <button class="filter-btn" data-filter="live">Casino en Vivo</button>
+                        <button class="filter-btn" data-filter="juegos">Juegos de Mesa</button>
+                    </div>
+
+
+                    <h3>Juegos en Tendencia</h3>
+                    <div class="game-list game-continue">
+                        <div class="game-card" data-category="slots">
+                            <img src="img/wanted.jpg" alt="Wanted Dead or a Wild">
+                        </div>
+                        <div class="game-card" data-category="slots">
+                            <img src="img/sweet.jpg" alt="Sweet Bonanza 1000">
+                        </div>
+                        <div class="game-card" data-category="slots">
+                            <img src="img/joker.jpg" alt="Joker's Jewels">
+                        </div>
+                        <div class="game-card" data-category="slots">
+                            <img src="img/sugar.jpg" alt="Sugar Rush 1000">
+                        </div>
+                        <div class="game-card" data-category="slots">
+                            <img src="img/bigbass.jpg" alt="Big Bass Rock and Roll">
+                        </div>
+                        <div class="game-card" data-category="slots">
+                            <img src="img/5lions.jpg" alt="5 Lions MegaWays 2">
+                        </div>
+                        <div class="game-card" data-category="slots">
+                            <img src="img/666.jpg" alt="SixSixSix">
+                        </div>
+                        <div class="game-card" data-category="slots">
+                            <img src="img/starlight.jpg" alt="Starlight Princess Super Scatter">
+                        </div>
+                        <div class="game-card" data-category="slots">
+                            <img src="img/sg" alt="Stauper Scatter">
+                        </div>
+                        <div class="game-card" data-category="live">
+                            <img src="img/ruleta.jpg" alt="Ruleta en Vivo">
+                        </div>
+                        <div class="game-card" data-category="live">
+                            <img src="img/blackjack.jpg" alt="BlackJack">
+                        </div>
+                        <div class="game-card" data-category="live">
+                            <img src="img/monopoly.jpg" alt="Monopoly">
+                        </div>
+                        <div class="game-card" data-category="live">
+                            <img src="img/stock.jpg" alt="Stock Market">
+                        </div>
+                        <div class="game-card" data-category="juegos">
+                            <img src="img/stake.jpg" alt="Ruleta">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,701 @@
+/* VARIABLES DE COLOR */
+:root {
+    --bg-dark: #1a1d23;
+    --bg-medium: #22262d;
+    --text-light: #f0f0f0;
+    --text-muted: #888;
+    --accent-blue: #007bff; /* Para el botón Monedero/Filtros */
+    --accent-green: #38b44a; /* Para el panel de Deportes/Botones de acción */
+    --link-hover: #4a515c;
+    --bg-card-hover: #2b3038;
+    --vip-start-color: #4CAF50;
+    --vip-end-color: #f1c40f; /* Color más premium para el final del progreso */
+}
+
+/* RESET Y ESTILOS BASE */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.app-container {
+    display: flex;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+/* --- BARRA LATERAL (SIDEBAR) --- */
+.sidebar {
+    width: 200px;
+    background-color: var(--bg-medium);
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #333;
+    transition: width 0.3s;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--text-light);
+    padding: 0 20px 20px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.nav-menu {
+    flex-grow: 1;
+}
+
+.nav-item {
+    display: block;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 12px 20px;
+    transition: background-color 0.2s, color 0.2s;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.nav-item:hover {
+    background-color: var(--link-hover);
+    color: var(--text-light);
+}
+
+.nav-item.active {
+    color: var(--text-light);
+    font-weight: bold;
+    background-color: #2b3038;
+}
+
+.nav-item.separator {
+    height: 1px;
+    background-color: #333;
+    margin: 10px 20px;
+    padding: 0;
+}
+
+/* --- ESTADOS COLAPSADOS DEL SIDEBAR --- */
+.sidebar.collapsed {
+    width: 60px;
+}
+
+.sidebar.collapsed .logo,
+.sidebar.collapsed .nav-item span {
+    display: none;
+}
+
+.sidebar.collapsed .nav-item {
+    padding: 12px 0;
+    text-align: center;
+    font-size: 18px; 
+}
+
+.sidebar.collapsed .nav-item.separator {
+    margin: 10px auto;
+    width: 60%;
+}
+
+/* Botón de control del Sidebar */
+.sidebar-toggle-btn {
+    position: fixed; /* Fixed para que permanezca visible */
+    top: 15px;
+    left: 210px;
+    background: var(--accent-blue);
+    color: white;
+    border: none;
+    padding: 5px 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 200;
+    transition: left 0.3s;
+}
+
+.sidebar.collapsed + .sidebar-toggle-btn {
+    left: 70px;
+}
+
+
+/* --- CONTENIDO PRINCIPAL (MAIN) --- */
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+/* HEADER */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-medium);
+    padding: 10px 70px;
+    border-bottom: 1px solid #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* Estilos de botones, saldo, etc. (como en el código anterior) */
+.nav-tabs .tab-btn {
+    background: #333;
+    color: var(--text-light);
+    border: none;
+    padding: 8px 15px;
+    margin-right: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+    font-weight: 500;
+}
+
+.nav-tabs .tab-btn:hover {
+    background-color: #4a515c;
+}
+
+.nav-tabs .tab-btn.active {
+    background-color: var(--bg-dark);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.account-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.balance-display {
+    padding: 8px 15px;
+    background-color: var(--bg-dark);
+    border-radius: 5px;
+    font-weight: bold;
+    color: var(--vip-end-color);
+}
+
+.deposit-btn {
+    background-color: var(--accent-blue);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.deposit-btn:hover {
+    background-color: #0056b3;
+}
+
+.user-icon {
+    font-size: 20px;
+    padding: 5px;
+    background-color: #333;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* === ESTILOS PARA LA SECCIÓN DEL BANNER PRINCIPAL CON EL LOGO === */
+.main-banner-section {
+    display: flex; /* CRÍTICO: Usa Flexbox para alinear el logo y el banner */
+    align-items: center; /* Centra verticalmente el logo y el banner */
+    gap: 50px; /* Espacio entre el logo y el banner */
+    
+    /* El mismo margen izquierdo que el contenido para alinear con el sidebar */
+    margin-bottom: 30px;
+    margin-left: 200px; /* Ancho del sidebar */
+    margin-top: 20px; /* Espacio superior desde el header */
+    margin-right: 30px; /* Margen derecho como el promo-banner original */
+}
+
+/* === ESTILOS PARA EL CONTENEDOR DEL LOGO === */
+.main-banner-section {
+    display: flex; 
+    align-items: center; 
+    gap: 10px; /* Espacio entre los tres elementos */
+    /* ... otros estilos ... */
+}
+
+/* --- AJUSTES PARA EL PERFIL DE USUARIO DENTRO DEL BANNER PRINCIPAL --- */
+.user-profile-sidebar {
+    width: 250px;       /* Ancho fijo para que no se estire */
+    height: 250px;      /* Misma altura que los banners */
+    flex-shrink: 0;     /* Evita que se encoja */
+    margin-left: 30px;
+    margin-right: 0px;
+    
+    background-color: var(--bg-medium); 
+    border-radius: 12px;
+    
+    display: flex;
+    flex-direction: column; /* Coloca el ícono encima del texto */
+    justify-content: center; /* Centra el contenido verticalmente */
+    align-items: center;    /* Centra el contenido horizontalmente */   
+    
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* El resto de los estilos del perfil de usuario que ya creamos */
+.user-avatar {
+    /* Mantenemos un tamaño adecuado */
+    font-size: 30px; 
+    margin-bottom: 5px; /* Pequeña separación del nombre */
+    /* ... otros estilos de avatar ... */
+}
+
+.username {
+    font-size: 16px; 
+    font-weight: bold;
+    /* ... otros estilos de username ... */
+}
+
+
+/* --- BANNER DE PROMOCIÓN --- */
+.promo-banner {
+    position: relative; /* CRÍTICO: Necesario para posicionar el pseudo-elemento */
+    flex-grow: 1; /* Permite que el banner ocupe el espacio restante */
+    height: 250px;
+    margin: 0px;
+    margin-left: 0px;
+    margin-right: 270px; 
+    border-radius: 12px;
+    overflow: hidden;
+    
+    display: flex;
+    justify-content: center; 
+    align-items: center;    
+    
+    text-align: center;
+    color: var(--text-light);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    transition: opacity 0.3s; 
+    z-index: 1; /* Asegura que el banner esté en una capa base */
+
+    /* **IMAGEN DE FONDO (mantenerla en el banner)** */
+    background-image: url('img/banner.jpg'); 
+    background-size: cover;          
+    background-position: center center; 
+    background-repeat: no-repeat;    
+    /* background-blend-mode ya no es tan necesario si usas el overlay, puedes quitarlo o ajustarlo */
+}
+
+.promo-banner::before {
+    content: ''; /* Obligatorio para pseudo-elementos */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Color negro semi-transparente (ajusta el 0.5) */
+    z-index: 1; /* Colócalo entre el fondo (banner) y el contenido (banner-content) */
+}
+
+.banner-content {
+    position: relative; /* CRÍTICO: Necesario para que z-index funcione */
+    z-index: 2; /* Mayor que el z-index del ::before para que el texto esté encima */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 60px;
+    padding-bottom: 30px;
+    height: 100%;
+    width: 100%;
+    
+}
+
+
+.register-btn {
+    background-color: var(--accent-green);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.register-btn:hover {
+    background-color: #2e8b57;
+    transform: translateY(-2px);
+}
+
+.banner-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+    background: url('https://via.placeholder.com/1200x250/2b3038/ffffff?text=TEXTURE');
+    background-size: cover;
+    z-index: 1;
+    pointer-events: none;
+}
+/* --- FIN BANNER --- */
+
+
+/* CUERPO Y PANELES (VIP, CATEGORÍAS) */
+.app-body {
+    padding: 0 30px 20px 30px; /* Ajustar padding superior ya que el banner no está dentro */
+    margin-left: 200px;
+    margin-right: 200px;
+}
+
+.user-status-panel {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.vip-progress {
+    background-color: var(--bg-medium);
+    padding: 20px;
+    border-radius: 8px;
+    width: 40%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.progress-bar {
+    background-color: #4a515c;
+    height: 10px;
+    border-radius: 5px;
+    margin: 5px 0;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(to right, var(--vip-start-color), var(--vip-end-color));
+    border-radius: 5px;
+}
+
+.category-panels {
+    display: flex;
+    gap: 20px;
+    width: 55%;
+}
+
+.category-card {
+    flex: 1;
+    background-color: var(--bg-medium);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.category-card:hover {
+    transform: scale(1.02);
+    background-color: var(--bg-card-hover);
+}
+
+.category-card.sports-card {
+    background: var(--accent-green);
+    color: var(--bg-dark);
+    font-weight: bold;
+}
+/* --- FIN PANELES --- */
+
+/* SECCIÓN DE JUEGOS, BÚSQUEDA Y FILTROS */
+.search-input {
+    width: 400px;
+    padding: 12px 15px;
+    border: 1px solid #333;
+    background-color: var(--bg-medium);
+    color: var(--text-light);
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.2s;
+    margin-bottom: 30px;
+}
+
+h3 {
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-weight: 600;
+    border-left: 4px solid var(--accent-blue);
+    padding-left: 10px;
+}
+
+.game-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start;
+    overflow-x: visible;
+    padding: 0 10px;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+    scrollbar-width: thin;
+    scrollbar-color: #333 var(--bg-dark);
+}
+
+.game-card {
+    min-width: 150px;
+    max-width: 150px;
+    background-color: var(--bg-medium);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.game-card .game-title {
+    /* 1. Cambia la fuente */
+    font-family: 'Montserrat', sans-serif; 
+    
+    /* 2. Ajusta el peso y el tamaño */
+    font-size: 13px;
+    font-weight: 800; /* Hace que el texto sea más grueso */
+    text-transform: uppercase; /* Opcional: para que se vea más impactante */
+    color: var(--text-light); 
+    
+    padding: 5px 8px; /* Pequeño espacio para que no se pegue al borde */
+    white-space: nowrap; /* Evita que el nombre del juego se corte si es muy largo */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Añade puntos suspensivos si se corta */
+}
+
+.game-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.7), /* Sombra azul brillante */
+                0 8px 16px rgba(0, 0, 0, 0.5);   /* Sombra oscura para profundidad */
+    border-color: var(--accent-blue); /* Opcional: un borde azul también se vería bien */
+}            
+
+
+.game-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.category-filter-list {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.filter-btn {
+    background: #333;
+    color: var(--text-light);
+    border: 1px solid #333;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 20px;
+    transition: background-color 0.2s, border-color 0.2s;
+    font-weight: 500;
+}
+
+.filter-btn.active {
+    background-color: var(--accent-blue);
+    border-color: var(--accent-blue);
+    font-weight: bold;
+}
+/* --- FIN SECCIÓN JUEGOS --- */
+
+/* --- MEDIA QUERIES (RESPONSIVIDAD) --- */
+
+/* Pantallas medianas (tabletas y menos) */
+@media (max-width: 1024px) {
+    /* SIDEBAR */
+    .sidebar {
+        width: 60px; /* Colapsado por defecto */
+        padding: 20px 0 0 0;
+    }
+    .sidebar .logo,
+    .sidebar .nav-item span {
+        display: none;
+    }
+    .sidebar .nav-item {
+        padding: 15px 0;
+        text-align: center;
+        font-size: 18px; 
+    }
+    .sidebar-toggle-btn {
+        display: none; /* Ocultar el botón de palanca en este rango si el sidebar es pequeño por defecto */
+    }
+    
+    /* BANNER */
+    .promo-banner {
+        margin: 20px 20px 30px 20px;
+    }
+    
+    /* CONTENIDO */
+    .app-body {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    .search-input {
+        width: 300px;
+    }
+}
+
+/* Pantallas pequeñas (móviles) */
+@media (max-width: 600px) {
+    .app-container {
+        flex-direction: column;
+        height: auto;
+    }
+
+    /* SIDEBAR - Comportamiento de menú superior o hidden */
+    .sidebar {
+        width: 100%;
+        height: auto;
+        padding: 10px;
+        border-right: none;
+        border-bottom: 1px solid #333;
+        position: static;
+        display: none; /* Ocultar el sidebar en móvil (se necesitaría un botón de menú hamburguesa) */
+    }
+    
+    .sidebar-toggle-btn {
+        display: none;
+    }
+
+    .app-header {
+        padding: 10px 15px;
+    }
+    
+    .balance-display {
+        display: none; /* Ocultar el saldo para ahorrar espacio */
+    }
+    
+    /* BANNER */
+    .promo-banner {
+        height: 150px;
+        margin: 10px 15px 20px 15px;
+    }
+    
+    .promo-banner h2 {
+        font-size: 20px;
+    } 
+
+    .promo-banner .register-btn {
+    /* Aquí definimos el estilo para el botón grande del banner */
+    margin-top: 0px;
+    padding: 12px 30px;
+    font-size: 16px;
+    background-color: var(--accent-green);
+    color: var(--bg-dark);
+    border-radius: 6px;
+    font-weight: 800;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    border: none;
+    box-shadow: 0 0 10px rgba(0, 231, 0, 0.6);
+    }
+
+    .promo-banner .register-btn:hover {
+    background-color: #00d200;
+    transform: scale(1.05); /* Escala ligeramente al pasar el mouse */
+    box-shadow: 0 0 20px rgba(0, 231, 0, 1), 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    
+    .register-btn {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+
+    /* CUERPO */
+    .app-body {
+        padding: 10px 15px 20px 15px;
+    }
+
+    .user-status-panel {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .vip-progress, .category-panels {
+        width: 100%;
+    }
+    
+    .category-panels {
+        gap: 15px;
+    }
+
+    .search-input {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    
+    .category-filter-list {
+        flex-wrap: wrap;
+    }
+}
+
+/* Busca la regla .auth-btn y asegúrate de que tenga esto */
+.auth-btn {
+    padding: 10px 20px; /* Aumenta el padding para que se vea más grande */
+    border-radius: 8px; /* Bordes más redondeados */
+    cursor: pointer;
+    font-weight: 700; 
+    transition: all 0.2s ease-in-out; 
+    border: none;
+    font-size: 14px;
+    text-transform: uppercase; 
+    text-decoration: none; 
+    display: inline-block; /* Para que el padding se aplique correctamente */
+    text-align: center; /* Centra el texto */
+}
+
+/* Busca .auth-btn.login-btn */
+.auth-btn.login-btn {
+    background-color: var(--bg-dark); /* Fondo oscuro como en la imagen */
+    color: var(--text-light); /* Texto blanco */
+    border: 1px solid #333; /* Borde sutil, puedes quitarlo si prefieres sin borde */
+    box-shadow: none; /* Elimina cualquier sombra preexistente */
+}
+
+.auth-btn.login-btn:hover {
+    background-color: #2b3038; /* Ligeramente más claro al pasar el mouse */
+    color: var(--text-light);
+    border-color: #4a515c; /* Borde más visible al pasar el mouse */
+    transform: translateY(0); /* Evita cualquier desplazamiento */
+    box-shadow: none;
+}
+
+.auth-btn.register-btn-ui {
+    background-color: var(--accent-blue); /* ¡Cambio a azul! */
+    color: white; /* Texto blanco para contraste */
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.4); /* Sombra azul para darle profundidad */
+    border: none; /* Asegura que no tenga borde */
+}
+
+.auth-btn.register-btn-ui:hover {
+    background-color: #0069d9; /* Un azul un poco más oscuro al pasar el mouse */
+    transform: translateY(-1px); /* Pequeño efecto 3D */
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.6);
+}
+
+.auth-state {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espacio entre los botones */
+}
