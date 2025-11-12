@@ -140,6 +140,30 @@
     </div>
 
     <script src="script.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAzUSmwPpBDtevFsefhZrjWeP-hegqUOGU",
+            authDomain: "casinobet614-db.firebaseapp.com",
+            projectId: "casinobet614-db",
+            storageBucket: "casinobet614-db.firebasestorage.app",
+            messagingSenderId: "608596135561",
+            appId: "1:608596135561:web:88a2fb077d69293c944058"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+    </script>
 </body>
 </html>
 /``
