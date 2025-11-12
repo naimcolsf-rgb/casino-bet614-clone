@@ -39,46 +39,47 @@
             height: 100%;
             border-radius: 50%;
             border: 10px solid gold;
-            transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            transition: transform 6s cubic-bezier(0.25, 0.1, 0.25, 1);
             position: relative;
             background: conic-gradient(
-                #ef4444 0% 1/37,  /* Rojo */
-                #10b981 1/37 2/37,  /* Verde */
-                #2563eb 2/37 3/37,  /* Azul */
-                #f97316 3/37 4/37,  /* Naranja */
-                #ef4444 4/37 5/37,
-                #10b981 5/37 6/37,
-                #2563eb 6/37 7/37,
-                #f97316 7/37 8/37,
-                #ef4444 8/37 9/37,
-                #10b981 9/37 10/37,
-                #2563eb 10/37 11/37,
-                #f97316 11/37 12/37,
-                #ef4444 12/37 13/37,
-                #10b981 13/37 14/37,
-                #2563eb 14/37 15/37,
-                #f97316 15/37 16/37,
-                #ef4444 16/37 17/37,
-                #10b981 17/37 18/37,
-                #2563eb 18/37 19/37,
-                #f97316 19/37 20/37,
-                #ef4444 20/37 21/37,
-                #10b981 21/37 22/37,
-                #2563eb 22/37 23/37,
-                #f97316 23/37 24/37,
-                #ef4444 24/37 25/37,
-                #10b981 25/37 26/37,
-                #2563eb 26/37 27/37,
-                #f97316 27/37 28/37,
-                #ef4444 28/37 29/37,
-                #10b981 29/37 30/37,
-                #2563eb 30/37 31/37,
-                #f97316 31/37 32/37,
-                #ef4444 32/37 33/37,
-                #10b981 33/37 34/37,
-                #2563eb 34/37 35/37,
-                #f97316 35/37 36/37,
-                #ef4444 36/37 100%
+                /* 37 segmentos (0-36) */
+                #ef4444 0% 9.72deg,  /* Rojo (1/37) */
+                #10b981 9.72deg 19.44deg,  /* Verde (0) */
+                #2563eb 19.44deg 29.16deg,  /* Azul (Simula Negro) */
+                #f97316 29.16deg 38.88deg,  /* Naranja (Simula Rojo) */
+                #ef4444 38.88deg 48.6deg,
+                #2563eb 48.6deg 58.32deg,
+                #f97316 58.32deg 68.04deg,
+                #ef4444 68.04deg 77.76deg,
+                #2563eb 77.76deg 87.48deg,
+                #f97316 87.48deg 97.2deg,
+                #ef4444 97.2deg 106.92deg,
+                #2563eb 106.92deg 116.64deg,
+                #f97316 116.64deg 126.36deg,
+                #ef4444 126.36deg 136.08deg,
+                #2563eb 136.08deg 145.8deg,
+                #f97316 145.8deg 155.52deg,
+                #ef4444 155.52deg 165.24deg,
+                #2563eb 165.24deg 174.96deg,
+                #f97316 174.96deg 184.68deg,
+                #ef4444 184.68deg 194.4deg,
+                #2563eb 194.4deg 204.12deg,
+                #f97316 204.12deg 213.84deg,
+                #ef4444 213.84deg 223.56deg,
+                #2563eb 223.56deg 233.28deg,
+                #f97316 233.28deg 243deg,
+                #ef4444 243deg 252.72deg,
+                #2563eb 252.72deg 262.44deg,
+                #f97316 262.44deg 272.16deg,
+                #ef4444 272.16deg 281.88deg,
+                #2563eb 281.88deg 291.6deg,
+                #f97316 291.6deg 301.32deg,
+                #ef4444 301.32deg 311.04deg,
+                #2563eb 311.04deg 320.76deg,
+                #f97316 320.76deg 330.48deg,
+                #ef4444 330.48deg 340.2deg,
+                #2563eb 340.2deg 349.92deg,
+                #f97316 349.92deg 360deg
             );
         }
         .marker {
@@ -136,7 +137,7 @@
                     <i class="fas fa-arrow-right mr-2 mt-1"></i> Iniciar Sesión
                 </button>
                 <p class="text-center text-sm mt-3">
-                    ¿No tienes una cuenta? <span id="toggle-register-link" class="text-yellow-500 hover:text-yellow-400 cursor-pointer" onclick="toggleAuthView(true)">Regístrate</span>
+                    ¿No tienes una cuenta? <span id="toggle-register-link" class="text-yellow-500 hover:text-yellow-400 cursor-pointer">Regístrate</span>
                 </p>
             </form>
 
@@ -156,7 +157,7 @@
                            class="w-full px-4 py-3 bg-gray-700 text-white rounded-xl focus:ring-red-500 focus:border-red-500 border-gray-600 transition">
                 </div>
                 <div>
-                    <input type="text" id="register-dni" placeholder="DNI (Opcional)"
+                    <input type="text" id="register-dni" placeholder="DNI" required
                            class="w-full px-4 py-3 bg-gray-700 text-white rounded-xl focus:ring-red-500 focus:border-red-500 border-gray-600 transition">
                 </div>
                 <button type="submit" id="register-btn"
@@ -164,7 +165,7 @@
                     <i class="fas fa-user-plus mr-2 mt-1"></i> Registrarse
                 </button>
                 <p class="text-center text-sm mt-3">
-                    ¿Ya tienes una cuenta? <span id="toggle-login-link" class="text-yellow-500 hover:text-yellow-400 cursor-pointer" onclick="toggleAuthView(false)">Inicia Sesión</span>
+                    ¿Ya tienes una cuenta? <span id="toggle-login-link" class="text-yellow-500 hover:text-yellow-400 cursor-pointer">Inicia Sesión</span>
                 </p>
             </form>
             
@@ -200,7 +201,7 @@
                     <select id="bet-type"
                             class="w-2/3 px-3 py-2 bg-gray-700 text-white rounded-xl focus:ring-yellow-500 focus:border-yellow-500 transition">
                         <option value="red">Rojo (x2)</option>
-                        <option value="black">Negro (x2)</option>
+                        <option value="black">Negro (Simula Azul/Naranja) (x2)</option>
                         <option value="green">Verde (x35)</option>
                     </select>
                 </div>
@@ -220,13 +221,14 @@
 
     </div>
 
-    <!-- Script de Firebase -->
+    <!-- Script de Firebase (Importación) -->
     <script type="module">
         // Importaciones de Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
         setLogLevel('debug'); // Habilitar logs para depuración
 
         // --- Variables Globales Proporcionadas por el Entorno ---
@@ -234,11 +236,13 @@
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : undefined;
 
+        // --- Variables Globales de la App ---
         let auth;
         let db;
         let userId = null;
-        let userEmail = null;
-        let userDataSnapshot = null; // Para almacenar la suscripción a Firestore
+        let userEmail = null; 
+        let unsubscribeBalance = null; // Función para detener el listener de Firestore
+        let isSpinning = false; // Estado para la ruleta
 
         // --- Referencias al DOM ---
         const authView = document.getElementById('auth-view');
@@ -259,45 +263,46 @@
         const betAmountInput = document.getElementById('bet-amount');
         const betTypeSelect = document.getElementById('bet-type');
         const logoutBtn = document.getElementById('logout-btn');
-
+        const toggleLoginLink = document.getElementById('toggle-login-link');
+        const toggleRegisterLink = document.getElementById('toggle-register-link');
+        
+        // --- Constantes del Juego ---
+        const RUTA_USUARIOS = `/artifacts/${appId}/public/data/users`;
+        const SALDO_INICIAL = 15000;
+        const resultColorMap = {
+             0: 'green', 1: 'red', 2: 'black', 3: 'red', 4: 'black', 5: 'red', 6: 'black',
+             7: 'red', 8: 'black', 9: 'red', 10: 'black', 11: 'red', 12: 'black',
+             13: 'red', 14: 'black', 15: 'red', 16: 'black', 17: 'red', 18: 'black',
+             19: 'red', 20: 'black', 21: 'red', 22: 'black', 23: 'red', 24: 'black',
+             25: 'red', 26: 'black', 27: 'red', 28: 'black', 29: 'red', 30: 'black',
+             31: 'red', 32: 'black', 33: 'red', 34: 'black', 35: 'red', 36: 'black',
+        };
+        const winMultipliers = { 'green': 35, 'red': 2, 'black': 2 };
 
         // --- Funciones Utilitarias ---
 
         function showMessage(message, type = 'info') {
             messageBox.textContent = message;
-            messageBox.className = `fixed top-0 left-0 right-0 p-4 text-center z-50 transition-colors duration-300`;
-
-            if (type === 'error') {
-                messageBox.classList.add('bg-red-700', 'text-white', 'block');
-            } else if (type === 'success') {
-                messageBox.classList.add('bg-green-600', 'text-white', 'block');
-            } else {
-                messageBox.classList.add('bg-blue-600', 'text-white', 'block');
-            }
-
-            setTimeout(() => {
-                messageBox.classList.replace('block', 'hidden');
-            }, 5000);
+            messageBox.className = `fixed top-0 left-0 right-0 p-4 text-center z-50 transition-all duration-300`;
+            if (type === 'error') messageBox.classList.add('bg-red-700', 'text-white', 'block');
+            else if (type === 'success') messageBox.classList.add('bg-green-600', 'text-white', 'block');
+            else messageBox.classList.add('bg-blue-600', 'text-white', 'block');
+            setTimeout(() => messageBox.classList.add('hidden'), 5000);
         }
 
         function toggleAuthView(isRegister = false) {
-            // Eliminar clases de énfasis de los botones
-            showLoginBtn.classList.remove('border-yellow-500', 'border-red-500', 'text-white');
-            showLoginBtn.classList.add('border-transparent', 'text-gray-400', 'hover:border-gray-600');
-            showRegisterBtn.classList.remove('border-yellow-500', 'border-red-500', 'text-white');
-            showRegisterBtn.classList.add('border-transparent', 'text-gray-400', 'hover:border-gray-600');
+            showLoginBtn.classList.toggle('border-yellow-500', !isRegister);
+            showLoginBtn.classList.toggle('text-white', !isRegister);
+            showLoginBtn.classList.toggle('text-gray-400', isRegister);
+            showLoginBtn.classList.toggle('border-transparent', isRegister);
+            
+            showRegisterBtn.classList.toggle('border-red-500', isRegister);
+            showRegisterBtn.classList.toggle('text-white', isRegister);
+            showRegisterBtn.classList.toggle('text-gray-400', !isRegister);
+            showRegisterBtn.classList.toggle('border-transparent', !isRegister);
 
-            if (isRegister) {
-                loginForm.classList.add('hidden');
-                registerForm.classList.remove('hidden');
-                showRegisterBtn.classList.replace('border-transparent', 'border-red-500');
-                showRegisterBtn.classList.replace('text-gray-400', 'text-white');
-            } else {
-                registerForm.classList.add('hidden');
-                loginForm.classList.remove('hidden');
-                showLoginBtn.classList.replace('border-transparent', 'border-yellow-500');
-                showLoginBtn.classList.replace('text-gray-400', 'text-white');
-            }
+            loginForm.classList.toggle('hidden', isRegister);
+            registerForm.classList.toggle('hidden', !isRegister);
         }
 
         function switchView(toDashboard) {
@@ -307,294 +312,250 @@
             } else {
                 dashboardView.classList.replace('block', 'hidden');
                 authView.classList.replace('hidden', 'block');
-                toggleAuthView(false); // Volver a la vista de Login por defecto
+                toggleAuthView(false); // Volver a Login por defecto
             }
+        }
+
+        // --- Lógica de Firestore (REAL) ---
+
+        function getUserDocRef(email) {
+            return doc(db, RUTA_USUARIOS, email.toLowerCase());
+        }
+
+        function startBalanceListener(email) {
+            if (unsubscribeBalance) unsubscribeBalance(); // Detener listener anterior
+            
+            const userDocRef = getUserDocRef(email);
+            unsubscribeBalance = onSnapshot(userDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    currentBalanceEl.textContent = `$${(data.balance || 0).toFixed(2)}`;
+                    welcomeMessageEl.textContent = `¡Hola, ${data.username || 'Jugador'}!`;
+                } else {
+                    showMessage("Error: No se encontraron datos del usuario.", 'error');
+                }
+            }, (error) => {
+                console.error("Error al escuchar saldo:", error);
+                showMessage("Error de conexión de saldo.", 'error');
+            });
+        }
+
+        async function updateBalanceInFirestore(amount) {
+            if (!userEmail || !db) return false;
+            const userDocRef = getUserDocRef(userEmail);
+
+            try {
+                const docSnap = await getDoc(userDocRef);
+                if (!docSnap.exists()) {
+                    showMessage("Error: Usuario no encontrado para actualizar saldo.", 'error');
+                    return false;
+                }
+                
+                const currentBalance = docSnap.data().balance || 0;
+                const newBalance = currentBalance + amount;
+
+                if (newBalance < 0) {
+                    showMessage("Saldo insuficiente.", 'error');
+                    return false;
+                }
+
+                await updateDoc(userDocRef, { balance: newBalance });
+                return true; // Éxito
+
+            } catch (e) {
+                console.error("Error al actualizar saldo:", e);
+                showMessage(`Error al procesar apuesta: ${e.message}`, 'error');
+                return false;
+            }
+        }
+
+        // --- Funciones de Autenticación (Simuladas en Firestore) ---
+
+        async function registerUser(username, email, password, dni) {
+            const userDocRef = getUserDocRef(email);
+            
+            // 1. Verificar si el documento ya existe
+            const docSnap = await getDoc(userDocRef);
+            if (docSnap.exists()) {
+                showMessage("El correo electrónico ya está registrado.", 'error');
+                return false;
+            }
+
+            // 2. Crear el documento
+            await setDoc(userDocRef, {
+                username: username,
+                email: email.toLowerCase(),
+                dni: dni,
+                simulatedPasswordHash: password.length, // Hash simulado
+                balance: SALDO_INICIAL,
+                createdAt: new Date().toISOString()
+            });
+
+            showMessage(`¡Registro exitoso! Saldo inicial: $${SALDO_INICIAL}`, 'success');
+            return true;
+        }
+
+        async function loginUser(email, password) {
+            const userDocRef = getUserDocRef(email);
+            const docSnap = await getDoc(userDocRef);
+
+            if (!docSnap.exists()) {
+                showMessage("Usuario no encontrado o contraseña incorrecta.", 'error');
+                return false;
+            }
+
+            const userData = docSnap.data();
+
+            // Verificación de contraseña simulada (comparamos la longitud)
+            if (userData.simulatedPasswordHash !== password.length) {
+                showMessage("Usuario no encontrado o contraseña incorrecta.", 'error');
+                return false;
+            }
+
+            userEmail = email.toLowerCase();
+            startBalanceListener(userEmail); // Iniciar escucha de saldo
+            switchView(true); // Cambiar a la vista del dashboard
+            showMessage(`¡Bienvenido de vuelta, ${userData.username}!`, 'success');
+            return true;
+        }
+
+        async function handleLogout() {
+            if (unsubscribeBalance) unsubscribeBalance(); // Detener escucha
+            userEmail = null;
+            // No necesitamos signOut(auth) porque usamos Auth Anónima
+            switchView(false);
+            showMessage("Sesión cerrada.", 'info');
         }
 
         // --- Lógica de Ruleta ---
 
-        const resultColorMap = {
-             0: 'green', 1: 'red', 2: 'black', 3: 'red', 4: 'black', 5: 'red', 6: 'black',
-             7: 'red', 8: 'black', 9: 'red', 10: 'black', 11: 'red', 12: 'black',
-             13: 'red', 14: 'black', 15: 'red', 16: 'black', 17: 'red', 18: 'black',
-             19: 'red', 20: 'black', 21: 'red', 22: 'black', 23: 'red', 24: 'black',
-             25: 'red', 26: 'black', 27: 'red', 28: 'black', 29: 'red', 30: 'black',
-             31: 'red', 32: 'black', 33: 'red', 34: 'black', 35: 'red', 36: 'black',
-        };
-        
-        const winMultipliers = {
-            'green': 35,
-            'red': 2,
-            'black': 2
-        };
-
-        function calculateWinnings(betType, betAmount, winningNumber) {
-            const winningColor = resultColorMap[winningNumber]; 
-            
-            if (betType === winningColor) {
-                const multiplier = winMultipliers[betType];
-                return betAmount * multiplier; 
-            }
-            return 0; 
-        }
-
         async function spinRoulette() {
+            if (isSpinning) return;
+            isSpinning = true;
             spinBtn.disabled = true;
             spinBtn.classList.add('disabled-btn');
 
             const betAmount = parseFloat(betAmountInput.value);
             const betType = betTypeSelect.value;
             
-            if (!userEmail) {
-                showMessage("Debes iniciar sesión para jugar.", 'error');
-                spinBtn.disabled = false;
-                spinBtn.classList.remove('disabled-btn');
-                return;
-            }
-
             if (isNaN(betAmount) || betAmount <= 0) {
-                showMessage("La apuesta debe ser un número positivo.", 'error');
+                showMessage("Apuesta no válida.", 'error');
+                isSpinning = false;
                 spinBtn.disabled = false;
                 spinBtn.classList.remove('disabled-btn');
                 return;
             }
 
-            // 1. Verificar saldo antes de descontar
-            const currentBalance = parseFloat(currentBalanceEl.textContent.replace('$', ''));
-            if (currentBalance < betAmount) {
-                showMessage("¡Saldo insuficiente para esta apuesta!", 'error');
-                spinBtn.disabled = false;
-                spinBtn.classList.remove('disabled-btn');
-                return;
+            // 1. Descontar la apuesta (esto actualiza Firestore)
+            const deductionSuccess = await updateBalanceInFirestore(-betAmount);
+            if (!deductionSuccess) {
+                 // El saldo insuficiente se maneja dentro de updateBalanceInFirestore
+                 isSpinning = false;
+                 spinBtn.disabled = false;
+                 spinBtn.classList.remove('disabled-btn');
+                 return;
             }
-            
-            // 2. Descontar la apuesta (actualiza solo localmente por ahora)
-            await updateBalanceInFirestore(-betAmount);
 
-            // 3. Lógica de Giro
+            // 2. Lógica de Giro
             const winningNumber = Math.floor(Math.random() * 37); // 0 a 36
             const winningColor = resultColorMap[winningNumber];
             
             const sectorAngle = 360 / 37;
-            // Rotación de varias vueltas + ángulo para aterrizar en el sector
             const rotationDegrees = (360 * 8) + (360 - (winningNumber * sectorAngle + sectorAngle / 2));
             
-            // 4. Aplicar rotación y esperar
+            // 3. Aplicar rotación y esperar
             rouletteWheel.style.transition = 'transform 6s cubic-bezier(0.25, 0.1, 0.25, 1)';
             rouletteWheel.style.transform = `rotate(${rotationDegrees}deg)`;
 
-            // Esperar a que termine la animación
+            // 4. Esperar a que termine la animación
             setTimeout(async () => {
-                // 5. Calcular ganancias
                 const winnings = calculateWinnings(betType, betAmount, winningNumber);
 
                 if (winnings > 0) {
-                    const profit = winnings;
-                    await updateBalanceInFirestore(profit);
-                    showMessage(`¡GANASTE! Cayó en el ${winningNumber} (${winningColor}). Ganancia: $${profit.toFixed(2)}`, 'success');
+                    // Si gana, devuelve la apuesta original + las ganancias
+                    const totalPayout = winnings; 
+                    await updateBalanceInFirestore(totalPayout);
+                    showMessage(`¡GANASTE! Cayó ${winningNumber} (${winningColor}). Ganaste: $${totalPayout.toFixed(2)}`, 'success');
                 } else {
-                    showMessage(`PERDISTE. Cayó en el ${winningNumber} (${winningColor}).`, 'error');
+                    showMessage(`PERDISTE. Cayó ${winningNumber} (${winningColor}).`, 'error');
                 }
 
-                // 6. Restablecer el botón
+                isSpinning = false;
                 spinBtn.disabled = false;
                 spinBtn.classList.remove('disabled-btn');
                 
-                // Resetear la transición visual para el siguiente giro
                 rouletteWheel.style.transition = 'none';
                 rouletteWheel.style.transform = `rotate(${rotationDegrees % 360}deg)`; 
-
             }, 6500); 
         }
 
-        // --- Lógica de Firestore (REAL) ---
-
-        // Función para obtener la referencia del documento de usuario
-        function getUserDocRef(email) {
-            return doc(db, `artifacts/${appId}/public/data/users`, email);
-        }
-
-        // 1. Observador de datos en tiempo real (onSnapshot)
-        function subscribeToUserData(email) {
-            if (userDataSnapshot) {
-                userDataSnapshot(); // Desuscribirse del observador anterior si existe
-            }
-            
-            const userDocRef = getUserDocRef(email);
-
-            userDataSnapshot = onSnapshot(userDocRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    updateUI(data); // Actualizar UI con datos de Firestore
-                } else {
-                    console.log("No se encontraron datos para el usuario. Asignando saldo inicial.");
-                    // Esto maneja el caso donde el doc existe en Auth pero no en Firestore (raro aquí)
-                    setDoc(userDocRef, { balance: 1000, username: 'Jugador', email: email }, { merge: true })
-                        .catch(e => console.error("Error al asignar saldo inicial:", e));
-                }
-            }, (error) => {
-                console.error("Error de Firestore en onSnapshot:", error);
-                showMessage("Error al cargar datos del saldo. Verifica la conexión.", 'error');
-            });
-        }
-
-        // 2. Actualización de Saldo en Firestore
-        async function updateBalanceInFirestore(amount) {
-            if (!userEmail || !db) return false;
-
-            const userDocRef = getUserDocRef(userEmail);
-
-            try {
-                // Obtener el documento actual para asegurar la atomicidad (lectura antes de escritura)
-                const docSnap = await getDoc(userDocRef);
-                if (!docSnap.exists()) {
-                     showMessage("Error: Documento de usuario no encontrado.", 'error');
-                     return false;
-                }
-                
-                const currentBalance = docSnap.data().balance || 0;
-                const newBalance = currentBalance + amount;
-                
-                // Si el saldo es insuficiente
-                if (newBalance < 0) {
-                    showMessage("¡Saldo insuficiente para esta apuesta!", 'error');
-                    return false;
-                }
-
-                // Actualizar el documento en Firestore
-                await setDoc(userDocRef, { balance: newBalance }, { merge: true });
-                return true;
-
-            } catch (e) {
-                console.error("Error al actualizar saldo en Firestore:", e);
-                showMessage(`Error al procesar la apuesta: ${e.message}`, 'error');
-                return false;
-            }
-        }
-
-        // 3. Actualizar UI
-        function updateUI(userData) {
-            currentBalanceEl.textContent = `$${(userData.balance || 0).toFixed(2)}`;
-            welcomeMessageEl.textContent = `¡Hola, ${userData.username || 'Jugador'}!`;
-        }
-
-        // --- Funciones de Autenticación (Firebase Auth) ---
-
-        async function registerUser(username, email, password, dni) {
-            // Este es un simulacro, ya que Firebase Auth no está disponible en este entorno.
-            // Con la base de datos de Firestore disponible, usamos el correo como ID único.
-            userEmail = email;
-            
-            // 1. Guardar la información inicial en Firestore
-            const userDocRef = getUserDocRef(email);
-            await setDoc(userDocRef, {
-                username: username,
-                email: email,
-                dni: dni,
-                balance: 1000 // Saldo inicial
-            });
-
-            // 2. Iniciar la escucha de cambios de saldo
-            subscribeToUserData(email);
-            
-            switchView(true);
-            showMessage("¡Registro exitoso! Bienvenido al Casino. Saldo inicial: $1000", 'success');
-            return true;
-        }
-
-        async function loginUser(email) {
-            // Simulación de inicio de sesión: solo verificamos si el documento existe en Firestore
-            const userDocRef = getUserDocRef(email);
-            try {
-                const docSnap = await getDoc(userDocRef);
-                
-                if (docSnap.exists()) {
-                    userEmail = email;
-                    subscribeToUserData(email);
-                    switchView(true);
-                    showMessage(`¡Bienvenido de vuelta, ${docSnap.data().username}!`, 'success');
-                } else {
-                    showMessage("Usuario no encontrado. Por favor regístrate.", 'error');
-                }
-            } catch (e) {
-                 console.error("Error al intentar iniciar sesión (verificando doc):", e);
-                 showMessage("Error de conexión al intentar iniciar sesión.", 'error');
-            }
-        }
-        
-        async function handleLogout() {
-            try {
-                // Quitar la suscripción a Firestore
-                if (userDataSnapshot) {
-                    userDataSnapshot();
-                    userDataSnapshot = null;
-                }
-                // Desloguear (solo cambia la vista ya que usamos Auth anónima de fondo)
-                userEmail = null; 
-                switchView(false);
-                showMessage("Sesión cerrada. ¡Vuelve pronto!", 'info');
-                // Podríamos llamar a signOut(auth) si hubiéramos usado correo/contraseña
-            } catch (e) {
-                console.error("Error al cerrar sesión:", e);
-                showMessage("Error al cerrar sesión.", 'error');
-            }
-        }
-        
         // --- FIREBASE: Inicialización ---
         
         async function initializeFirebase() {
-            if (!Object.keys(firebaseConfig).length) {
-                console.error("Error: Configuración de Firebase no válida.");
-                loginBtn.disabled = true;
-                registerBtn.disabled = true;
-                return;
+            // 1. Verificar si la configuración de Firebase está presente
+            if (!Object.keys(firebaseConfig).length || firebaseConfig.apiKey === "AIzaSimulatedKey") {
+                console.error("Configuración de Firebase no válida o simulada.");
+                showMessage("Error de configuración de Firebase. La app no puede guardar datos.", 'error');
+                // Dejamos los botones deshabilitados (como están en el HTML)
+                return; 
             }
 
             try {
+                // 2. Inicializar App, Auth y Firestore
                 const app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
-                db = getFirestore(app); // Inicializa Firestore
+                db = getFirestore(app);
 
-                // Usar el token para autenticar o iniciar anónimamente
+                // 3. Autenticar al usuario (con token o anónimamente)
                 if (initialAuthToken) {
                     await signInWithCustomToken(auth, initialAuthToken);
                 } else {
                     await signInAnonymously(auth);
                 }
                 
+                // 4. Observador de estado de autenticación
                 onAuthStateChanged(auth, (user) => {
                     if (user) {
                         userId = user.uid;
                         currentUserIdDisplay.textContent = userId;
                         userIdContainer.classList.remove('hidden');
+                        
+                        // 5. Habilitar botones de Auth AHORA que todo está listo
+                        loginBtn.disabled = false;
+                        loginBtn.classList.remove('disabled-btn');
+                        registerBtn.disabled = false;
+                        registerBtn.classList.remove('disabled-btn');
+                        
+                        showMessage("Sistema listo. Puedes iniciar sesión o registrarte.", 'success');
+                        
                     } else {
                         userId = null;
                         currentUserIdDisplay.textContent = 'No autenticado';
+                        if (dashboardView.classList.contains('block')) {
+                            switchView(false);
+                        }
                     }
-
-                    // Habilitar botones una vez que la autenticación está lista
-                    loginBtn.disabled = false;
-                    loginBtn.classList.remove('disabled-btn');
-                    registerBtn.disabled = false;
-                    registerBtn.classList.remove('disabled-btn');
                 });
 
             } catch (error) {
-                console.error("Error de inicialización de Firebase:", error);
-                showMessage("Error grave de conexión con Firebase.", 'error');
-                loginBtn.disabled = true;
-                registerBtn.disabled = true;
+                console.error("Error al inicializar Firebase:", error);
+                showMessage(`Error de inicialización: ${error.message}`, 'error');
             }
         }
         
         // --- LISTENERS DE EVENTOS ---
 
+        // Tabs
         showRegisterBtn.addEventListener('click', () => toggleAuthView(true));
         showLoginBtn.addEventListener('click', () => toggleAuthView(false));
+        toggleLoginLink.addEventListener('click', () => toggleAuthView(false));
+        toggleRegisterLink.addEventListener('click', () => toggleAuthView(true));
+        
+        // Dashboard
         logoutBtn.addEventListener('click', handleLogout);
         spinBtn.addEventListener('click', spinRoulette);
 
-
+        // Registro
         registerForm.addEventListener('submit', async function(event) {
             event.preventDefault();
             const btn = registerBtn; 
@@ -607,15 +568,19 @@
             const password = document.getElementById('register-password').value;
             const dni = document.getElementById('register-dni').value;
 
-            // Nota: Aquí se omitiría la creación real de usuario en Firebase Auth 
-            // y la verificación de contraseña, ya que no se puede hacer en este entorno.
-            // En su lugar, se usa Firestore para registrar al usuario por correo.
-
             try {
-                await registerUser(username, email, password, dni);
+                if (password.length < 6) {
+                    showMessage('La contraseña debe tener al menos 6 caracteres.', 'error');
+                    return; 
+                }
                 
+                const success = await registerUser(username, email, password, dni);
+                if (success) {
+                    toggleAuthView(false); // Cambiar a Login después del registro
+                }
+
             } catch (error) {
-                console.error("Error durante el proceso de registro:", error);
+                console.error("Error en submit de registro:", error);
                 showMessage(`Error desconocido: ${error.message}`, 'error');
             } finally {
                 btn.disabled = false;
@@ -624,6 +589,7 @@
             }
         });
 
+        // Login
         loginForm.addEventListener('submit', async function(event) {
             event.preventDefault();
             const btn = loginBtn; 
@@ -631,16 +597,19 @@
             btn.classList.add('disabled-btn');
             btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2 mt-1"></i> Iniciando...';
 
-
             const email = document.getElementById('login-email').value;
-            // La contraseña no se usa para iniciar sesión (simulación), solo se verifica la existencia del doc
-            // const password = document.getElementById('login-password').value; 
+            const password = document.getElementById('login-password').value; 
             
-            await loginUser(email);
+            await loginUser(email, password); // Pasamos la contraseña para la simulación
             
             btn.disabled = false;
             btn.classList.remove('disabled-btn');
             btn.innerHTML = '<i class="fas fa-arrow-right mr-2 mt-1"></i> Iniciar Sesión';
+        });
+
+        // Simular Depósito
+        simulateDepositBtn.addEventListener('click', () => {
+            updateBalanceInFirestore(100);
         });
         
         // Iniciar Firebase al cargar el script
