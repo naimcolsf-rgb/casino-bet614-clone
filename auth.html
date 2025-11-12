@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casino Royale - Dashboard</title>
+    <title>Casino Royale - Ruleta Digital</title>
     <!-- Cargar Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -23,7 +23,63 @@
         .disabled-btn {
             opacity: 0.6;
             cursor: not-allowed;
+            filter: grayscale(100%);
         }
+        
+        /* Estilos específicos de la Ruleta */
+        .wheel-container {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: #000;
+            border: 8px solid #333;
+            box-shadow: 0 0 20px rgba(224, 185, 107, 0.5);
+            margin: 20px auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            transform: rotate(0deg);
+            transition: transform 5s cubic-bezier(0.25, 0.1, 0.25, 1); /* Curva de desaceleración */
+        }
+        
+        .segment {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            top: 0;
+            left: 50%;
+            transform-origin: 0% 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            border: 1px solid #1a202c;
+        }
+
+        /* Estilos de los segmentos (solo 3 para esta simulación: Rojo, Negro, Verde) */
+        .segment.red { background-color: #e53e3e; } /* Rojo */
+        .segment.black { background-color: #000000; } /* Negro */
+        .segment.green { background-color: #38a169; } /* Verde (Cero) */
+
+        .pointer {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 20px solid #e0b96b; /* Dorado */
+            z-index: 10;
+        }
+
     </style>
 </head>
 <body class="p-4">
@@ -72,8 +128,9 @@
                 </div>
 
                 <div>
-                    <button id="login-btn" type="submit"
-                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-lg text-base font-bold text-gray-900 bg-yellow-500 hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition duration-150 ease-in-out transform hover:scale-[1.02]">
+                    <!-- **CRÍTICO: Inicialmente deshabilitado en el HTML** -->
+                    <button id="login-btn" type="submit" disabled
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-lg text-base font-bold text-gray-900 bg-yellow-500 hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition duration-150 ease-in-out transform hover:scale-[1.02] disabled-btn">
                         <i class="fas fa-sign-in-alt mr-2 mt-1"></i>
                         Iniciar Sesión
                     </button>
@@ -106,9 +163,12 @@
                     </div>
                 </div>
 
+                <!-- NOTA: El campo DNI se ha eliminado para simplificar y coincidir con la lógica del JS. -->
+                
                 <div>
-                    <button id="register-btn" type="submit"
-                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-lg text-base font-bold text-gray-900 bg-red-600 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 transition duration-150 ease-in-out transform hover:scale-[1.02]">
+                    <!-- **CRÍTICO: Inicialmente deshabilitado en el HTML** -->
+                    <button id="register-btn" type="submit" disabled
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-lg text-base font-bold text-gray-900 bg-red-600 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 transition duration-150 ease-in-out transform hover:scale-[1.02] disabled-btn">
                         <i class="fas fa-user-plus mr-2 mt-1"></i>
                         Registrarse
                     </button>
@@ -136,31 +196,80 @@
                 </button>
             </header>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Tarjeta de Saldo (Real-Time Data) -->
-                <div class="md:col-span-1 bg-gray-700 p-6 rounded-xl shadow-lg border-l-4 border-yellow-500">
-                    <p class="text-sm font-medium text-gray-300">SALDO ACTUAL</p>
-                    <div class="flex items-center mt-2">
-                        <i class="fas fa-coins text-3xl text-yellow-500 mr-3"></i>
-                        <span id="display-balance" class="text-4xl font-bold text-white tracking-wide">
-                            $0.00
-                        </span>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Tarjeta de Saldo y Depósito -->
+                <div class="lg:col-span-1 flex flex-col space-y-4">
+                    <div class="bg-gray-700 p-6 rounded-xl shadow-lg border-l-4 border-yellow-500">
+                        <p class="text-sm font-medium text-gray-300">SALDO ACTUAL</p>
+                        <div class="flex items-center mt-2">
+                            <i class="fas fa-coins text-3xl text-yellow-500 mr-3"></i>
+                            <span id="display-balance" class="text-4xl font-bold text-white tracking-wide">
+                                $0.00
+                            </span>
+                        </div>
                     </div>
-                    <p class="text-xs mt-2 text-gray-400">El saldo se actualiza en tiempo real.</p>
+                    
+                    <div class="bg-gray-700 p-4 rounded-xl shadow-lg">
+                        <h4 class="text-lg font-semibold text-white mb-3">Administrar Fondos</h4>
+                        <button id="simulate-deposit-btn" class="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-500 transition duration-150">
+                            <i class="fas fa-plus-circle mr-2"></i> Simular Depósito (+$100)
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Contenedor del Juego (Simulación) -->
-                <div class="md:col-span-2 bg-gray-900 p-6 rounded-xl shadow-inner border border-gray-700 flex flex-col justify-center items-center">
-                    <h3 class="text-2xl font-semibold text-white mb-4">¡Elige tu Juego!</h3>
-                    <p class="text-gray-400 mb-6 text-center">Aquí integraremos la Ruleta, BlackJack o Máquinas Tragamonedas.</p>
+                <!-- Ruleta Digital (Juego Principal) -->
+                <div class="lg:col-span-2 bg-gray-900 p-6 rounded-xl shadow-inner border border-gray-700 flex flex-col items-center">
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-4">Ruleta de la Fortuna</h3>
                     
-                    <button id="simulate-game-btn" class="px-6 py-3 bg-green-600 text-white font-bold rounded-lg hover:bg-green-500 transition duration-150 transform hover:scale-[1.05] shadow-lg disabled-btn" disabled>
-                        <i class="fas fa-dice mr-2"></i> Simular Juego (-$10)
-                    </button>
+                    <!-- Contenedor del Rueda -->
+                    <div class="wheel-container">
+                        <!-- El puntero se mantiene fijo en la parte superior -->
+                        <div class="pointer"></div> 
+                        <!-- Contenedor que girará -->
+                        <div id="roulette-wheel" class="wheel">
+                            <!-- Segmentos de la Ruleta (18 segmentos para simular) -->
+                            <div class="segment green" style="transform: rotate(0deg);"><i class="fas fa-certificate"></i> 0</div> 
+                            <div class="segment red" style="transform: rotate(20deg);">1</div>
+                            <div class="segment black" style="transform: rotate(40deg);">2</div>
+                            <div class="segment red" style="transform: rotate(60deg);">3</div>
+                            <div class="segment black" style="transform: rotate(80deg);">4</div>
+                            <div class="segment red" style="transform: rotate(100deg);">5</div>
+                            <div class="segment black" style="transform: rotate(120deg);">6</div>
+                            <div class="segment red" style="transform: rotate(140deg);">7</div>
+                            <div class="segment black" style="transform: rotate(160deg);">8</div>
+                            <div class="segment red" style="transform: rotate(180deg);">9</div>
+                            <div class="segment black" style="transform: rotate(200deg);">10</div>
+                            <div class="segment red" style="transform: rotate(220deg);">11</div>
+                            <div class="segment black" style="transform: rotate(240deg);">12</div>
+                            <div class="segment red" style="transform: rotate(260deg);">13</div>
+                            <div class="segment black" style="transform: rotate(280deg);">14</div>
+                            <div class="segment red" style="transform: rotate(300deg);">15</div>
+                            <div class="segment black" style="transform: rotate(320deg);">16</div>
+                            <div class="segment green" style="transform: rotate(340deg);">00</div>
+                        </div>
+                    </div>
                     
-                    <button id="simulate-deposit-btn" class="mt-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-500 transition duration-150">
-                        <i class="fas fa-plus-circle mr-2"></i> Simular Depósito (+$50)
-                    </button>
+                    <!-- Controles del Juego -->
+                    <div class="w-full max-w-sm mt-4 p-4 bg-gray-700 rounded-lg shadow-inner">
+                        <label for="bet-amount" class="block text-sm font-medium text-gray-300 mb-2">Cantidad a Apostar ($)</label>
+                        <input id="bet-amount" type="number" min="1" value="10" step="1"
+                            class="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-800 text-white focus:ring-yellow-500 focus:border-yellow-500 mb-4">
+                        
+                        <label for="bet-choice" class="block text-sm font-medium text-gray-300 mb-2">Apuesta (Rojo, Negro o 0)</label>
+                        <select id="bet-choice" 
+                            class="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-800 text-white focus:ring-yellow-500 focus:border-yellow-500 mb-4">
+                            <option value="red">Rojo (Paga 2x)</option>
+                            <option value="black">Negro (Paga 2x)</option>
+                            <option value="green">0 ó 00 (Paga 15x)</option>
+                        </select>
+                        
+                        <button id="spin-btn" 
+                            class="w-full px-6 py-3 bg-red-700 text-white font-bold rounded-lg hover:bg-red-600 transition duration-150 transform hover:scale-[1.02] shadow-xl disabled-btn" disabled>
+                            <i class="fas fa-sync-alt mr-2"></i> ¡Girar la Ruleta!
+                        </button>
+                    </div>
+
+                    <p id="result-text" class="text-xl font-bold mt-4 text-white min-h-[30px]">Esperando apuesta...</p>
                 </div>
             </div>
             
@@ -180,7 +289,7 @@
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : undefined;
 
-        // Referencias a elementos del DOM
+        // Referencias a elementos del DOM de Autenticación/Vista
         const authView = document.getElementById('auth-view');
         const dashboardView = document.getElementById('dashboard-view');
         const loginForm = document.getElementById('login-form');
@@ -191,22 +300,56 @@
         const currentUserIdDisplay = document.getElementById('current-user-id');
         const userIdContainer = document.getElementById('user-id-display');
         
+        // Elementos CRÍTICOS para habilitar/deshabilitar
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn'); // CRÍTICO: Aseguramos la referencia
+        
         // Elementos del Dashboard
         const displayUsername = document.getElementById('display-username');
         const displayBalance = document.getElementById('display-balance');
         const logoutBtn = document.getElementById('logout-btn');
-        const simulateGameBtn = document.getElementById('simulate-game-btn');
         const simulateDepositBtn = document.getElementById('simulate-deposit-btn');
+
+        // Elementos de la Ruleta
+        const rouletteWheel = document.getElementById('roulette-wheel');
+        const betAmountInput = document.getElementById('bet-amount');
+        const betChoiceSelect = document.getElementById('bet-choice');
+        const spinBtn = document.getElementById('spin-btn');
+        const resultText = document.getElementById('result-text');
 
         let isLoginView = true;
         let db;
         let auth;
         let userId = null;
-        let userEmail = null; // Necesario para identificar el documento en Firestore
-        let unsubscribeBalance = null; // Para detener la escucha en tiempo real de Firestore
+        let userEmail = null; 
+        let currentBalance = 0; // Almacenamos el saldo actual
+        let isSpinning = false; // Estado para evitar giros múltiples
+        let unsubscribeBalance = null; 
 
         // Ruta base para los datos de la colección de 'usuarios'
         const USERS_COLLECTION_PATH = `/artifacts/${appId}/public/data/users`;
+
+        // Colores y pagos de la ruleta simplificada:
+        const ROULETTE_POCKETS = [
+            { number: 0, color: 'green', multiplier: 15 },
+            { number: 1, color: 'red', multiplier: 2 },
+            { number: 2, color: 'black', multiplier: 2 },
+            { number: 3, color: 'red', multiplier: 2 },
+            { number: 4, color: 'black', multiplier: 2 },
+            { number: 5, color: 'red', multiplier: 2 },
+            { number: 6, color: 'black', multiplier: 2 },
+            { number: 7, color: 'red', multiplier: 2 },
+            { number: 8, color: 'black', multiplier: 2 },
+            { number: 9, color: 'red', multiplier: 2 },
+            { number: 10, color: 'black', multiplier: 2 },
+            { number: 11, color: 'red', multiplier: 2 },
+            { number: 12, color: 'black', multiplier: 2 },
+            { number: 13, color: 'red', multiplier: 2 },
+            { number: 14, color: 'black', multiplier: 2 },
+            { number: 15, color: 'red', multiplier: 2 },
+            { number: 16, color: 'black', multiplier: 2 },
+            { number: 0o0, color: 'green', multiplier: 15 }
+        ];
 
         // --- UTILS: Funciones de Interfaz de Usuario ---
 
@@ -221,7 +364,7 @@
             } else { // info
                 messageBox.classList.add('bg-yellow-900', 'text-yellow-300');
             }
-            messageBox.style.top = '4px'; // Asegura que esté visible
+            messageBox.style.top = '4px'; 
             setTimeout(() => {
                 messageBox.classList.add('hidden');
                 messageBox.style.top = '-50px';
@@ -243,25 +386,29 @@
             }
         }
         
-        // Función para cambiar de vista (Auth <-> Dashboard)
         function switchView(showDashboard) {
             if (showDashboard) {
                 authView.classList.remove('opacity-100', 'block');
                 authView.classList.add('opacity-0', 'hidden');
-                
                 setTimeout(() => {
                     dashboardView.classList.remove('opacity-0', 'hidden');
                     dashboardView.classList.add('opacity-100', 'block');
-                }, 500); // Espera la transición de opacidad
+                }, 500); 
             } else {
                 dashboardView.classList.remove('opacity-100', 'block');
                 dashboardView.classList.add('opacity-0', 'hidden');
-                
                 setTimeout(() => {
                     authView.classList.remove('opacity-0', 'hidden');
                     authView.classList.add('opacity-100', 'block');
-                }, 500); // Espera la transición de opacidad
+                }, 500); 
             }
+        }
+
+        function setSpinButtonState(disabled) {
+            spinBtn.disabled = disabled;
+            spinBtn.classList.toggle('disabled-btn', disabled);
+            betAmountInput.disabled = disabled;
+            betChoiceSelect.disabled = disabled;
         }
 
         // --- FIREBASE: Inicialización y Autenticación ---
@@ -269,7 +416,8 @@
         async function initializeFirebase() {
             try {
                 if (!Object.keys(firebaseConfig).length) {
-                    console.error("Firebase Config no está disponible.");
+                    console.error("Firebase Config no está disponible. Los botones de auth permanecerán deshabilitados.");
+                    showMessage("Error de configuración de Firebase. La app no puede guardar datos.", 'error');
                     return;
                 }
                 
@@ -291,12 +439,18 @@
                     } else {
                         userId = null;
                         currentUserIdDisplay.textContent = 'No autenticado';
+                        // Si el usuario cierra sesión, asegurarnos de volver a Auth
+                        if (dashboardView.classList.contains('block')) {
+                            switchView(false);
+                        }
                     }
                 });
 
-                // Habilitar botones una vez que Firebase esté listo
-                document.getElementById('login-btn').disabled = false;
-                document.getElementById('register-btn').disabled = false;
+                // CRÍTICO: Habilitar botones de autenticación solo después de inicializar
+                loginBtn.disabled = false;
+                loginBtn.classList.remove('disabled-btn');
+                registerBtn.disabled = false;
+                registerBtn.classList.remove('disabled-btn');
 
             } catch (error) {
                 console.error("Error al inicializar o autenticar Firebase:", error);
@@ -306,33 +460,30 @@
         
         // --- FIRESTORE: Funciones de Guardar y Cargar Datos ---
         
-        /**
-         * 🚨 FUNCIÓN CRUCIAL: Escucha cambios en tiempo real del saldo.
-         * @param {string} email - Email del usuario (ID del documento).
-         */
         function startBalanceListener(email) {
-            // Si ya hay un listener activo, lo detenemos primero
             if (unsubscribeBalance) {
                 unsubscribeBalance();
             }
 
             const userDocRef = doc(db, USERS_COLLECTION_PATH, email);
 
-            // onSnapshot crea una conexión en tiempo real
             unsubscribeBalance = onSnapshot(userDocRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    const newBalance = (data.balance || 0).toFixed(2);
+                    currentBalance = data.balance || 0;
+                    const newBalance = currentBalance.toFixed(2);
                     displayBalance.textContent = `$${newBalance}`;
                     displayUsername.textContent = data.username || 'Jugador';
                     
-                    // Habilitar botón de juego si hay saldo suficiente
-                    simulateGameBtn.disabled = data.balance < 10;
-                    simulateGameBtn.classList.toggle('disabled-btn', data.balance < 10);
+                    // Control de saldo para el juego
+                    const betAmount = parseFloat(betAmountInput.value) || 0;
+                    const canSpin = !isSpinning && currentBalance >= betAmount && betAmount > 0;
+                    setSpinButtonState(!canSpin);
                     
                 } else {
-                    console.log("Documento de usuario no encontrado después del inicio de sesión.");
-                    showMessage("Error al cargar los datos en tiempo real.", 'error');
+                    console.log("Documento de usuario no encontrado. Volviendo a la vista de autenticación.");
+                    // Detener escucha si el documento desaparece
+                    if (unsubscribeBalance) unsubscribeBalance(); 
                 }
             }, (error) => {
                 console.error("Error al escuchar cambios en el saldo:", error);
@@ -340,28 +491,26 @@
             });
         }
         
-        /**
-         * Simula el registro: Crea un documento de usuario en Firestore.
-         */
         async function registerUser(username, email, password) {
             if (!db || !userId) return showMessage('Sistema no listo.', 'error');
             try {
+                // 1. Verificar si el email ya existe
                 const usersRef = collection(db, USERS_COLLECTION_PATH);
                 const q = query(usersRef, where("email", "==", email));
                 const querySnapshot = await getDocs(q);
 
                 if (!querySnapshot.empty) {
-                    showMessage('El correo electrónico ya está registrado.', 'error');
+                    showMessage('El correo electrónico ya está registrado. Intenta iniciar sesión.', 'error');
                     return false;
                 }
 
+                // 2. Crear el documento de usuario
                 const userDocRef = doc(db, USERS_COLLECTION_PATH, email);
                 const userData = {
                     username: username,
                     email: email,
-                    // NOTA: Contraseña solo para simulación de validación
-                    simulatedPasswordHash: password.length, 
-                    balance: 1000.00, // Saldo inicial con decimales
+                    simulatedPasswordHash: password.length, // Usamos la longitud como hash simulado
+                    balance: 1000.00, // Saldo inicial
                     creationDate: new Date().toISOString(),
                 };
 
@@ -371,14 +520,11 @@
 
             } catch (error) {
                 console.error("Error al registrar el usuario en Firestore:", error);
-                showMessage(`Error de registro: ${error.message}`, 'error');
+                showMessage(`Error de registro en Firestore: ${error.message}`, 'error');
                 return false;
             }
         }
 
-        /**
-         * Simula el inicio de sesión: Carga los datos y cambia a la vista de Dashboard.
-         */
         async function loginUser(email, password) {
             if (!db || !userId) return showMessage('Sistema no listo.', 'error');
 
@@ -393,15 +539,13 @@
                 
                 const userData = docSnap.data();
 
-                // Simulación de validación de contraseña
                 if (userData.simulatedPasswordHash !== password.length) {
                     showMessage('Contraseña incorrecta.', 'error');
                     return false;
                 }
 
-                // Éxito: Guardamos el email para futuras operaciones y cargamos la vista
                 userEmail = email; 
-                startBalanceListener(email); // 🚨 Iniciar la escucha en tiempo real
+                startBalanceListener(email); // Iniciar la escucha en tiempo real
                 switchView(true);
                 showMessage(`¡Bienvenido, ${userData.username}!`, 'success');
                 return true;
@@ -413,20 +557,13 @@
             }
         }
         
-        /**
-         * Simula un cambio en el saldo del usuario (Juego o Depósito).
-         * @param {number} amount - Cantidad a sumar o restar.
-         */
         async function updateBalance(amount) {
             if (!db || !userEmail) return showMessage('No hay usuario activo para actualizar.', 'error');
 
             try {
                 const userDocRef = doc(db, USERS_COLLECTION_PATH, userEmail);
-
-                // Usamos updateDoc para modificar un campo existente
-                // Nota: Firestore permite hacer operaciones atómicas para incrementar/decrementar,
-                // pero aquí hacemos una lectura y escritura simple por simplicidad.
                 
+                // Obtenemos el saldo más reciente antes de actualizar
                 const docSnap = await getDoc(userDocRef);
                 if (!docSnap.exists()) return;
                 
@@ -441,37 +578,134 @@
                     balance: newBalance,
                     lastUpdate: new Date().toISOString()
                 });
-
-                // La interfaz se actualizará automáticamente gracias a onSnapshot!
-                if (amount < 0) {
-                     showMessage(`¡Juego simulado! Has apostado $${Math.abs(amount).toFixed(2)}.`, 'info');
-                } else {
-                     showMessage(`¡Depósito simulado exitoso de $${amount.toFixed(2)}!`, 'success');
-                }
+                
+                // onSnapshot se encargará de actualizar la UI
+                return true;
 
             } catch (error) {
                 console.error("Error al actualizar el saldo:", error);
                 showMessage(`Error al actualizar saldo: ${error.message}`, 'error');
+                return false;
             }
         }
+
+        // --- LÓGICA DEL JUEGO DE LA RULETA ---
         
-        // --- Manejadores de Eventos ---
+        /**
+         * Determina el resultado de la ruleta y la ganancia/pérdida.
+         * @param {number} bet - Cantidad apostada.
+         * @param {string} choice - 'red', 'black', o 'green'.
+         */
+        function playRoulette(bet, choice) {
+            // Selecciona un número al azar de los 18 segmentos
+            const winningPocket = ROULETTE_POCKETS[Math.floor(Math.random() * ROULETTE_POCKETS.length)];
+            const winningColor = winningPocket.color;
+            const winningNumber = winningPocket.number;
+
+            let resultAmount = -bet; // Por defecto, se pierde la apuesta
+            let win = false;
+            
+            // Comprueba si el color ganador coincide con la apuesta
+            if (winningColor === choice) {
+                win = true;
+                // Multiplicador (2x para R/B, 15x para Green/0)
+                const multiplier = winningPocket.multiplier;
+                resultAmount = bet * multiplier - bet; // Se resta la apuesta inicial para obtener solo la ganancia neta
+                showMessage(`¡GANASTE! Cayó en ${winningNumber} (${winningColor}). Ganas $${resultAmount.toFixed(2)}.`, 'success');
+            } else {
+                showMessage(`Perdiste. Cayó en ${winningNumber} (${winningColor}). Pierdes $${bet.toFixed(2)}.`, 'error');
+            }
+
+            // Calculamos el ángulo de giro (apuntamos al centro del segmento ganador)
+            const winningIndex = ROULETTE_POCKETS.findIndex(p => p.number === winningNumber);
+            const baseAngle = winningIndex * 20; 
+            const totalRotations = 5 * 360; 
+            const finalAngle = totalRotations - baseAngle; 
+
+            // Aplicar el giro CSS
+            rouletteWheel.style.transition = 'transform 5s cubic-bezier(0.25, 0.1, 0.25, 1)';
+            rouletteWheel.style.transform = `rotate(${finalAngle}deg)`;
+
+            // Deshabilitar el botón durante el giro
+            isSpinning = true;
+            setSpinButtonState(true);
+            resultText.textContent = `¡Girando! Apostaste a ${choice.toUpperCase()}...`;
+            
+            // Una vez que el giro termina (5 segundos después)
+            setTimeout(async () => {
+                // 1. Actualizar el saldo en Firestore
+                await updateBalance(resultAmount);
+                
+                // 2. Mostrar el resultado final
+                const winLoss = resultAmount >= 0 ? `Ganancia: +$${resultAmount.toFixed(2)}` : `Pérdida: -$${Math.abs(resultAmount).toFixed(2)}`;
+                resultText.innerHTML = `¡Resultado: ${winningNumber} (${winningColor.toUpperCase()})! <span class="${win ? 'text-green-400' : 'text-red-400'}">${winLoss}</span>`;
+
+                // 3. Restaurar el estado
+                isSpinning = false;
+                // Llama al listener para reevaluar si puede volver a girar
+                if(userEmail) startBalanceListener(userEmail); 
+                
+                // 4. Limpiar la transición para el próximo giro
+                setTimeout(() => {
+                    rouletteWheel.style.transition = 'none';
+                }, 500); 
+
+            }, 5000); // Duración del giro CSS
+        }
+
+
+        // --- Manejadores de Eventos del Dashboard ---
 
         logoutBtn.addEventListener('click', async () => {
             if (unsubscribeBalance) {
-                unsubscribeBalance(); // Detener la escucha de Firestore
+                unsubscribeBalance();
                 unsubscribeBalance = null;
             }
             userEmail = null;
-            await signOut(auth); // Cerrar sesión de Firebase Auth (anónima)
-            switchView(false); // Volver a la vista de autenticación
+            await signOut(auth); 
+            switchView(false); 
             showMessage("Sesión cerrada correctamente.", 'info');
         });
 
-        // Manejador de registro
+        // Manejador de simulación de depósito: sumar $100
+        simulateDepositBtn.addEventListener('click', () => {
+            updateBalance(100);
+            showMessage("Depositando $100.00...", 'info');
+        });
+        
+        // Manejador de la Ruleta
+        spinBtn.addEventListener('click', () => {
+            const betAmount = parseFloat(betAmountInput.value);
+            const betChoice = betChoiceSelect.value;
+            
+            if (isSpinning) {
+                return; // Ignorar clic si ya está girando
+            }
+
+            if (isNaN(betAmount) || betAmount <= 0) {
+                return showMessage("Ingresa una cantidad de apuesta válida.", 'error');
+            }
+
+            if (betAmount > currentBalance) {
+                return showMessage("Saldo insuficiente para esta apuesta.", 'error');
+            }
+            
+            // Iniciar la lógica de juego
+            playRoulette(betAmount, betChoice);
+        });
+
+        // Reevaluar el estado del botón al cambiar la apuesta
+        betAmountInput.addEventListener('input', () => {
+            const betAmount = parseFloat(betAmountInput.value) || 0;
+            const canSpin = !isSpinning && currentBalance >= betAmount && betAmount > 0;
+            setSpinButtonState(!canSpin);
+        });
+        
+        // --- Manejadores de Eventos de Autenticación ---
+
         registerForm.addEventListener('submit', async function(event) {
             event.preventDefault();
-            const btn = document.getElementById('register-btn');
+            const btn = registerBtn; // Usamos la referencia global
             
             // 1. Deshabilitar inmediatamente el botón y mostrar el estado de carga
             btn.disabled = true;
@@ -505,10 +739,9 @@
             }
         });
 
-        // Manejador de inicio de sesión
         loginForm.addEventListener('submit', async function(event) {
             event.preventDefault();
-            const btn = document.getElementById('login-btn');
+            const btn = loginBtn; // Usamos la referencia global
             btn.disabled = true;
             btn.classList.add('disabled-btn');
 
@@ -521,23 +754,10 @@
             btn.classList.remove('disabled-btn');
         });
         
-        // Manejador de simulación de juego: restar $10
-        simulateGameBtn.addEventListener('click', () => {
-            updateBalance(-10);
-        });
-        
-        // Manejador de simulación de depósito: sumar $50
-        simulateDepositBtn.addEventListener('click', () => {
-            updateBalance(50);
-        });
-        
         // Listener de evento para el enlace de alternar
         toggleLink.addEventListener('click', toggleAuthView);
 
         // Iniciar Firebase al cargar el script
-        // Deshabilitar botones inicialmente hasta que Firebase esté listo
-        document.getElementById('login-btn').disabled = true;
-        document.getElementById('register-btn').disabled = true;
         initializeFirebase();
 
     </script>
