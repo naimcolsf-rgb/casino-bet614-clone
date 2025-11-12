@@ -6,6 +6,7 @@
     <title>Casino Royale - Ruleta Digital</title>
     <!-- Cargar Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Cargar Font Awesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* Estilos personalizados para un tema de casino lujoso y oscuro */
@@ -30,44 +31,57 @@
         .wheel-container {
             width: 250px;
             height: 250px;
-            border-radius: 50%;
-            background: #000;
-            border: 8px solid #333;
-            box-shadow: 0 0 20px rgba(224, 185, 107, 0.5);
-            margin: 20px auto;
             position: relative;
-            overflow: hidden;
+            margin: 0 auto;
         }
-
         .wheel {
             width: 100%;
             height: 100%;
-            transform: rotate(0deg);
-            transition: transform 5s cubic-bezier(0.25, 0.1, 0.25, 1); /* Curva de desaceleración */
+            border-radius: 50%;
+            border: 10px solid gold;
+            transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            position: relative;
+            background: conic-gradient(
+                #ef4444 0% 1/37,  /* Rojo */
+                #10b981 1/37 2/37,  /* Verde */
+                #2563eb 2/37 3/37,  /* Azul */
+                #f97316 3/37 4/37,  /* Naranja */
+                #ef4444 4/37 5/37,
+                #10b981 5/37 6/37,
+                #2563eb 6/37 7/37,
+                #f97316 7/37 8/37,
+                #ef4444 8/37 9/37,
+                #10b981 9/37 10/37,
+                #2563eb 10/37 11/37,
+                #f97316 11/37 12/37,
+                #ef4444 12/37 13/37,
+                #10b981 13/37 14/37,
+                #2563eb 14/37 15/37,
+                #f97316 15/37 16/37,
+                #ef4444 16/37 17/37,
+                #10b981 17/37 18/37,
+                #2563eb 18/37 19/37,
+                #f97316 19/37 20/37,
+                #ef4444 20/37 21/37,
+                #10b981 21/37 22/37,
+                #2563eb 22/37 23/37,
+                #f97316 23/37 24/37,
+                #ef4444 24/37 25/37,
+                #10b981 25/37 26/37,
+                #2563eb 26/37 27/37,
+                #f97316 27/37 28/37,
+                #ef4444 28/37 29/37,
+                #10b981 29/37 30/37,
+                #2563eb 30/37 31/37,
+                #f97316 31/37 32/37,
+                #ef4444 32/37 33/37,
+                #10b981 33/37 34/37,
+                #2563eb 34/37 35/37,
+                #f97316 35/37 36/37,
+                #ef4444 36/37 100%
+            );
         }
-        
-        .segment {
-            position: absolute;
-            width: 50%;
-            height: 50%;
-            top: 0;
-            left: 50%;
-            transform-origin: 0% 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: bold;
-            color: white;
-            border: 1px solid #1a202c;
-        }
-
-        /* Estilos de los segmentos (solo 3 para esta simulación: Rojo, Negro, Verde) */
-        .segment.red { background-color: #e53e3e; } /* Rojo */
-        .segment.black { background-color: #000000; } /* Negro */
-        .segment.green { background-color: #38a169; } /* Verde (Cero) */
-
-        .pointer {
+        .marker {
             position: absolute;
             top: -10px;
             left: 50%;
@@ -76,362 +90,499 @@
             height: 0;
             border-left: 10px solid transparent;
             border-right: 10px solid transparent;
-            border-bottom: 20px solid #e0b96b; /* Dorado */
+            border-top: 15px solid #ff0000;
+            filter: drop-shadow(0 0 5px #ff0000);
             z-index: 10;
         }
 
     </style>
 </head>
-<body class="p-4">
+<body>
 
-    <!-- Contenedor Principal de la Aplicación -->
-    <div id="app-container" class="w-full max-w-4xl bg-gray-800 p-8 md:p-10 rounded-xl shadow-2xl transition-all duration-300 border-t-4 border-yellow-600">
+    <!-- Contenedor principal de la aplicación -->
+    <div class="w-full max-w-sm sm:max-w-md p-6 sm:p-8 bg-gray-800 rounded-2xl shadow-2xl transition-all duration-300">
+        
+        <!-- Mensaje de estado (éxito/error) -->
+        <div id="message-box" class="fixed top-0 left-0 right-0 p-4 text-center hidden z-50"></div>
 
-        <!-- Caja de Mensajes de Estado (Global) -->
-        <div id="message-box" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 p-3 rounded-lg text-center font-semibold z-50 min-w-[300px] transition-all duration-300" role="alert">
-            <!-- Los mensajes se muestran aquí -->
+        <!-- Vista de Autenticación (Inicialmente visible) -->
+        <div id="auth-view" class="block">
+            <div class="text-center mb-6">
+                <span class="text-5xl text-yellow-500 mb-2">
+                    <i class="fas fa-crown"></i>
+                </span>
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-wider">AUTENTICACIÓN</h1>
+            </div>
+
+            <!-- Tabs de Login/Registro -->
+            <div class="flex border-b border-gray-700 mb-6 text-xl">
+                <button id="show-login" class="flex-1 py-2 text-white border-b-2 border-yellow-500 font-semibold transition duration-200">Iniciar Sesión</button>
+                <button id="show-register" class="flex-1 py-2 text-gray-400 border-b-2 border-transparent hover:border-gray-600 font-semibold transition duration-200">Registrarse</button>
+            </div>
+
+            <!-- Formulario de LOGIN -->
+            <form id="login-form" class="space-y-4">
+                <p class="text-center text-gray-400 -mt-4">Inicia Sesión para Jugar</p>
+                <div>
+                    <input type="email" id="login-email" placeholder="Correo Electrónico" required
+                           class="w-full px-4 py-3 bg-gray-700 text-white rounded-xl focus:ring-yellow-500 focus:border-yellow-500 border-gray-600 transition">
+                </div>
+                <div>
+                    <input type="password" id="login-password" placeholder="Contraseña" required minlength="6"
+                           class="w-full px-4 py-3 bg-gray-700 text-white rounded-xl focus:ring-yellow-500 focus:border-yellow-500 border-gray-600 transition">
+                </div>
+                <button type="submit" id="login-btn" 
+                        class="w-full flex items-center justify-center py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg shadow-green-900/50 transition duration-150 disabled-btn" disabled>
+                    <i class="fas fa-arrow-right mr-2 mt-1"></i> Iniciar Sesión
+                </button>
+                <p class="text-center text-sm mt-3">
+                    ¿No tienes una cuenta? <span id="toggle-register-link" class="text-yellow-500 hover:text-yellow-400 cursor-pointer" onclick="toggleAuthView(true)">Regístrate</span>
+                </p>
+            </form>
+
+            <!-- Formulario de REGISTRO (Inicialmente oculto) -->
+            <form id="register-form" class="space-y-4 hidden">
+                <p class="text-center text-gray-400 -mt-4">Crea Tu Cuenta</p>
+                <div>
+                    <input type="text" id="register-username" placeholder="Nombre de Usuario" required
+                           class="w-full px-4 py-3 bg-gray-700 text-white rounded-xl focus:ring-red-500 focus:border-red-500 border-gray-600 transition">
+                </div>
+                <div>
+                    <input type="email" id="register-email" placeholder="Correo Electrónico" required
+                           class="w-full px-4 py-3 bg-gray-700 text-white rounded-xl focus:ring-red-500 focus:border-red-500 border-gray-600 transition">
+                </div>
+                <div>
+                    <input type="password" id="register-password" placeholder="Contraseña" required minlength="6"
+                           class="w-full px-4 py-3 bg-gray-700 text-white rounded-xl focus:ring-red-500 focus:border-red-500 border-gray-600 transition">
+                </div>
+                <div>
+                    <input type="text" id="register-dni" placeholder="DNI (Opcional)"
+                           class="w-full px-4 py-3 bg-gray-700 text-white rounded-xl focus:ring-red-500 focus:border-red-500 border-gray-600 transition">
+                </div>
+                <button type="submit" id="register-btn"
+                        class="w-full flex items-center justify-center py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg shadow-red-900/50 transition duration-150 disabled-btn" disabled>
+                    <i class="fas fa-user-plus mr-2 mt-1"></i> Registrarse
+                </button>
+                <p class="text-center text-sm mt-3">
+                    ¿Ya tienes una cuenta? <span id="toggle-login-link" class="text-yellow-500 hover:text-yellow-400 cursor-pointer" onclick="toggleAuthView(false)">Inicia Sesión</span>
+                </p>
+            </form>
+            
         </div>
         
-        <!-- ============================================== -->
-        <!-- 1. VISTA DE AUTENTICACIÓN (Inicio de Sesión/Registro) -->
-        <!-- ============================================== -->
-        <div id="auth-view" class="transition-opacity duration-500 opacity-100 block">
-             <div class="text-center mb-8">
-                <i class="fas fa-crown text-4xl text-yellow-500 mb-2 animate-pulse"></i>
-                <h1 class="text-3xl font-extrabold text-white tracking-wider">
-                    AUTENTICACIÓN
-                </h1>
-                <p id="auth-title" class="text-yellow-400 text-lg mt-2 font-medium">Iniciar Sesión para Jugar</p>
+        <!-- Vista del Dashboard/Casino (Inicialmente oculto) -->
+        <div id="dashboard-view" class="hidden">
+            <div class="text-center mb-6">
+                <h1 id="welcome-message" class="text-2xl sm:text-3xl font-extrabold text-white tracking-wider mb-2"></h1>
+                <div class="p-4 bg-yellow-900/30 rounded-xl shadow-lg inline-block">
+                    <p class="text-yellow-400 text-sm font-semibold">SALDO ACTUAL:</p>
+                    <p id="current-balance" class="text-4xl font-extrabold text-yellow-500">$0.00</p>
+                </div>
+                <!-- Muestra el User ID -->
+                <div id="user-id-container" class="mt-4 hidden text-xs text-gray-500">
+                    ID Usuario: <span id="current-user-id" class="font-mono text-gray-400"></span>
+                </div>
             </div>
-            
-            <!-- ID de Usuario (Para demostración de Firestore) -->
-            <p id="user-id-display" class="text-center text-xs text-gray-400 mb-4 hidden">
-                ID de Sesión: <span id="current-user-id" class="font-mono text-yellow-500 break-all">...</span>
-            </p>
 
-            <!-- Formulario de Inicio de Sesión -->
-            <form id="login-form" class="space-y-6">
-                <div>
-                    <label for="login-email" class="block text-sm font-medium text-gray-300">Correo Electrónico</label>
-                    <div class="mt-1">
-                        <input id="login-email" name="email" type="email" required autocomplete="email"
-                            class="appearance-none block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 bg-gray-700 text-white transition duration-150 ease-in-out sm:text-sm">
-                    </div>
-                </div>
-
-                <div>
-                    <label for="login-password" class="block text-sm font-medium text-gray-300">Contraseña</label>
-                    <div class="mt-1">
-                        <input id="login-password" name="password" type="password" required autocomplete="current-password"
-                            class="appearance-none block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 bg-gray-700 text-white transition duration-150 ease-in-out sm:text-sm">
-                    </div>
-                </div>
-
-                <div>
-                    <!-- **CRÍTICO: Inicialmente deshabilitado en el HTML** -->
-                    <button id="login-btn" type="submit" disabled
-                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-lg text-base font-bold text-gray-900 bg-yellow-500 hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition duration-150 ease-in-out transform hover:scale-[1.02] disabled-btn">
-                        <i class="fas fa-sign-in-alt mr-2 mt-1"></i>
-                        Iniciar Sesión
-                    </button>
-                </div>
-            </form>
-
-            <!-- Formulario de Registro (Inicialmente oculto) -->
-            <form id="register-form" class="space-y-6 hidden">
-                <div>
-                    <label for="register-username" class="block text-sm font-medium text-gray-300">Nombre de Usuario</label>
-                    <div class="mt-1">
-                        <input id="register-username" name="username" type="text" required autocomplete="username"
-                            class="appearance-none block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 bg-gray-700 text-white transition duration-150 ease-in-out sm:text-sm">
-                    </div>
-                </div>
-
-                <div>
-                    <label for="register-email" class="block text-sm font-medium text-gray-300">Correo Electrónico</label>
-                    <div class="mt-1">
-                        <input id="register-email" name="email" type="email" required autocomplete="email"
-                            class="appearance-none block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 bg-gray-700 text-white transition duration-150 ease-in-out sm:text-sm">
-                    </div>
-                </div>
-
-                <div>
-                    <label for="register-password" class="block text-sm font-medium text-gray-300">Contraseña</label>
-                    <div class="mt-1">
-                        <input id="register-password" name="password" type="password" required autocomplete="new-password"
-                            class="appearance-none block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 bg-gray-700 text-white transition duration-150 ease-in-out sm:text-sm">
-                    </div>
-                </div>
-
-                <!-- NOTA: El campo DNI se ha eliminado para simplificar y coincidir con la lógica del JS. -->
+            <!-- Controles de la Ruleta -->
+            <div class="p-6 bg-gray-900 rounded-xl shadow-inner shadow-black/50 mb-6">
+                <h2 class="text-xl font-bold text-white mb-4 border-b border-gray-700 pb-2">🎰 Ruleta Digital</h2>
                 
-                <div>
-                    <!-- **CRÍTICO: Inicialmente deshabilitado en el HTML** -->
-                    <button id="register-btn" type="submit" disabled
-                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-lg text-base font-bold text-gray-900 bg-red-600 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 transition duration-150 ease-in-out transform hover:scale-[1.02] disabled-btn">
-                        <i class="fas fa-user-plus mr-2 mt-1"></i>
-                        Registrarse
-                    </button>
+                <div class="wheel-container mb-4">
+                    <div class="marker"></div>
+                    <div id="roulette-wheel" class="wheel"></div>
                 </div>
-            </form>
 
-            <!-- Enlace para cambiar de vista -->
-            <p class="mt-6 text-center text-sm text-gray-400">
-                <button id="toggle-auth-link" class="font-medium text-yellow-500 hover:text-yellow-400 focus:outline-none">
-                    ¿No tienes una cuenta? Regístrate
+                <div class="flex space-x-2 mb-4">
+                    <input type="number" id="bet-amount" value="10" min="1" step="1"
+                           class="w-1/3 px-3 py-2 bg-gray-700 text-white rounded-xl focus:ring-yellow-500 focus:border-yellow-500 transition"
+                           placeholder="Apuesta">
+                    <select id="bet-type"
+                            class="w-2/3 px-3 py-2 bg-gray-700 text-white rounded-xl focus:ring-yellow-500 focus:border-yellow-500 transition">
+                        <option value="red">Rojo (x2)</option>
+                        <option value="black">Negro (x2)</option>
+                        <option value="green">Verde (x35)</option>
+                    </select>
+                </div>
+
+                <button id="spin-btn" 
+                        class="w-full flex items-center justify-center py-3 bg-red-700 hover:bg-red-800 text-white font-bold rounded-xl shadow-lg shadow-red-900/50 transition duration-150">
+                    <i class="fas fa-hand-point-up mr-2 mt-1"></i> ¡Girar Ruleta!
                 </button>
-            </p>
-        </div>
-
-        <!-- ============================================== -->
-        <!-- 2. VISTA DEL DASHBOARD (Juego) -->
-        <!-- ============================================== -->
-        <div id="dashboard-view" class="transition-opacity duration-500 opacity-0 hidden">
-            <header class="flex justify-between items-center pb-6 border-b border-gray-700 mb-6">
-                <h2 class="text-3xl font-extrabold text-white">
-                    Bienvenido, <span id="display-username" class="text-yellow-400">Jugador</span>
-                </h2>
-                <button id="logout-btn" class="text-sm text-red-400 hover:text-red-300 transition duration-150">
-                    <i class="fas fa-sign-out-alt mr-1"></i> Cerrar Sesión
-                </button>
-            </header>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Tarjeta de Saldo y Depósito -->
-                <div class="lg:col-span-1 flex flex-col space-y-4">
-                    <div class="bg-gray-700 p-6 rounded-xl shadow-lg border-l-4 border-yellow-500">
-                        <p class="text-sm font-medium text-gray-300">SALDO ACTUAL</p>
-                        <div class="flex items-center mt-2">
-                            <i class="fas fa-coins text-3xl text-yellow-500 mr-3"></i>
-                            <span id="display-balance" class="text-4xl font-bold text-white tracking-wide">
-                                $0.00
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-gray-700 p-4 rounded-xl shadow-lg">
-                        <h4 class="text-lg font-semibold text-white mb-3">Administrar Fondos</h4>
-                        <button id="simulate-deposit-btn" class="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-500 transition duration-150">
-                            <i class="fas fa-plus-circle mr-2"></i> Simular Depósito (+$100)
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Ruleta Digital (Juego Principal) -->
-                <div class="lg:col-span-2 bg-gray-900 p-6 rounded-xl shadow-inner border border-gray-700 flex flex-col items-center">
-                    <h3 class="text-3xl font-bold text-yellow-400 mb-4">Ruleta de la Fortuna</h3>
-                    
-                    <!-- Contenedor del Rueda -->
-                    <div class="wheel-container">
-                        <!-- El puntero se mantiene fijo en la parte superior -->
-                        <div class="pointer"></div> 
-                        <!-- Contenedor que girará -->
-                        <div id="roulette-wheel" class="wheel">
-                            <!-- Segmentos de la Ruleta (18 segmentos para simular) -->
-                            <div class="segment green" style="transform: rotate(0deg);"><i class="fas fa-certificate"></i> 0</div> 
-                            <div class="segment red" style="transform: rotate(20deg);">1</div>
-                            <div class="segment black" style="transform: rotate(40deg);">2</div>
-                            <div class="segment red" style="transform: rotate(60deg);">3</div>
-                            <div class="segment black" style="transform: rotate(80deg);">4</div>
-                            <div class="segment red" style="transform: rotate(100deg);">5</div>
-                            <div class="segment black" style="transform: rotate(120deg);">6</div>
-                            <div class="segment red" style="transform: rotate(140deg);">7</div>
-                            <div class="segment black" style="transform: rotate(160deg);">8</div>
-                            <div class="segment red" style="transform: rotate(180deg);">9</div>
-                            <div class="segment black" style="transform: rotate(200deg);">10</div>
-                            <div class="segment red" style="transform: rotate(220deg);">11</div>
-                            <div class="segment black" style="transform: rotate(240deg);">12</div>
-                            <div class="segment red" style="transform: rotate(260deg);">13</div>
-                            <div class="segment black" style="transform: rotate(280deg);">14</div>
-                            <div class="segment red" style="transform: rotate(300deg);">15</div>
-                            <div class="segment black" style="transform: rotate(320deg);">16</div>
-                            <div class="segment green" style="transform: rotate(340deg);">00</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Controles del Juego -->
-                    <div class="w-full max-w-sm mt-4 p-4 bg-gray-700 rounded-lg shadow-inner">
-                        <label for="bet-amount" class="block text-sm font-medium text-gray-300 mb-2">Cantidad a Apostar ($)</label>
-                        <input id="bet-amount" type="number" min="1" value="10" step="1"
-                            class="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-800 text-white focus:ring-yellow-500 focus:border-yellow-500 mb-4">
-                        
-                        <label for="bet-choice" class="block text-sm font-medium text-gray-300 mb-2">Apuesta (Rojo, Negro o 0)</label>
-                        <select id="bet-choice" 
-                            class="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-800 text-white focus:ring-yellow-500 focus:border-yellow-500 mb-4">
-                            <option value="red">Rojo (Paga 2x)</option>
-                            <option value="black">Negro (Paga 2x)</option>
-                            <option value="green">0 ó 00 (Paga 15x)</option>
-                        </select>
-                        
-                        <button id="spin-btn" 
-                            class="w-full px-6 py-3 bg-red-700 text-white font-bold rounded-lg hover:bg-red-600 transition duration-150 transform hover:scale-[1.02] shadow-xl disabled-btn" disabled>
-                            <i class="fas fa-sync-alt mr-2"></i> ¡Girar la Ruleta!
-                        </button>
-                    </div>
-
-                    <p id="result-text" class="text-xl font-bold mt-4 text-white min-h-[30px]">Esperando apuesta...</p>
-                </div>
             </div>
-            
-            <p class="text-xs text-center text-gray-600 mt-8">Nota: Los datos de usuario se guardan en la colección pública de Firestore.</p>
+
+            <!-- Botón de Salir -->
+            <button id="logout-btn" 
+                    class="w-full flex items-center justify-center py-2 text-sm bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-xl transition mt-4">
+                <i class="fas fa-sign-out-alt mr-2 mt-1"></i> Salir
+            </button>
         </div>
 
     </div>
 
+    <!-- Script de Firebase (Importación) -->
     <script type="module">
-        // Importaciones de Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, query, where, collection, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        setLogLevel('debug'); // Ver logs de Firestore
 
         // --- Variables Globales Proporcionadas por el Entorno ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-casino-app';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        let firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : undefined;
 
-        // Referencias a elementos del DOM de Autenticación/Vista
-        const authView = document.getElementById('auth-view');
-        const dashboardView = document.getElementById('dashboard-view');
-        const loginForm = document.getElementById('login-form');
-        const registerForm = document.getElementById('register-form');
-        const toggleLink = document.getElementById('toggle-auth-link');
-        const authTitle = document.getElementById('auth-title');
-        const messageBox = document.getElementById('message-box');
-        const currentUserIdDisplay = document.getElementById('current-user-id');
-        const userIdContainer = document.getElementById('user-id-display');
-        
-        // Elementos CRÍTICOS para habilitar/deshabilitar
-        const loginBtn = document.getElementById('login-btn');
-        const registerBtn = document.getElementById('register-btn'); // CRÍTICO: Aseguramos la referencia
-        
-        // Elementos del Dashboard
-        const displayUsername = document.getElementById('display-username');
-        const displayBalance = document.getElementById('display-balance');
-        const logoutBtn = document.getElementById('logout-btn');
-        const simulateDepositBtn = document.getElementById('simulate-deposit-btn');
+        // **CRÍTICO: Configuración de Respaldo si no se cargan las variables del entorno**
+        if (!Object.keys(firebaseConfig).length) {
+            console.warn("ADVERTENCIA: Usando configuración de Firebase de respaldo (simulada) para forzar la inicialización.");
+            firebaseConfig = {
+                apiKey: "AIzaSimulatedKey",
+                authDomain: "simulated-domain.firebaseapp.com",
+                projectId: "simulated-project",
+                storageBucket: "simulated-bucket.appspot.com",
+                messagingSenderId: "1234567890",
+                appId: "1:1234567890:web:simulatedapp"
+            };
+        }
 
-        // Elementos de la Ruleta
-        const rouletteWheel = document.getElementById('roulette-wheel');
-        const betAmountInput = document.getElementById('bet-amount');
-        const betChoiceSelect = document.getElementById('bet-choice');
-        const spinBtn = document.getElementById('spin-btn');
-        const resultText = document.getElementById('result-text');
-
-        let isLoginView = true;
-        let db;
-        let auth;
+        // --- Referencias de Firestore ---
+        let db, auth;
         let userId = null;
-        let userEmail = null; 
-        let currentBalance = 0; // Almacenamos el saldo actual
-        let isSpinning = false; // Estado para evitar giros múltiples
-        let unsubscribeBalance = null; 
-
-        // Ruta base para los datos de la colección de 'usuarios'
         const USERS_COLLECTION_PATH = `/artifacts/${appId}/public/data/users`;
 
-        // Colores y pagos de la ruleta simplificada:
-        const ROULETTE_POCKETS = [
-            { number: 0, color: 'green', multiplier: 15 },
-            { number: 1, color: 'red', multiplier: 2 },
-            { number: 2, color: 'black', multiplier: 2 },
-            { number: 3, color: 'red', multiplier: 2 },
-            { number: 4, color: 'black', multiplier: 2 },
-            { number: 5, color: 'red', multiplier: 2 },
-            { number: 6, color: 'black', multiplier: 2 },
-            { number: 7, color: 'red', multiplier: 2 },
-            { number: 8, color: 'black', multiplier: 2 },
-            { number: 9, color: 'red', multiplier: 2 },
-            { number: 10, color: 'black', multiplier: 2 },
-            { number: 11, color: 'red', multiplier: 2 },
-            { number: 12, color: 'black', multiplier: 2 },
-            { number: 13, color: 'red', multiplier: 2 },
-            { number: 14, color: 'black', multiplier: 2 },
-            { number: 15, color: 'red', multiplier: 2 },
-            { number: 16, color: 'black', multiplier: 2 },
-            { number: 0o0, color: 'green', multiplier: 15 }
-        ];
+        // --- Referencias al DOM ---
+        const authView = document.getElementById('auth-view');
+        const dashboardView = document.getElementById('dashboard-view');
+        const showLoginBtn = document.getElementById('show-login');
+        const showRegisterBtn = document.getElementById('show-register');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const currentBalanceEl = document.getElementById('current-balance');
+        const welcomeMessageEl = document.getElementById('welcome-message');
+        const messageBox = document.getElementById('message-box');
+        const currentUserIdDisplay = document.getElementById('current-user-id');
+        const userIdContainer = document.getElementById('user-id-container');
+        const rouletteWheel = document.getElementById('roulette-wheel');
+        const spinBtn = document.getElementById('spin-btn');
+        const betAmountInput = document.getElementById('bet-amount');
+        const betTypeSelect = document.getElementById('bet-type');
 
-        // --- UTILS: Funciones de Interfaz de Usuario ---
+        // --- Funciones Utilitarias ---
 
-        function showMessage(message, type = 'error') {
+        // Muestra un mensaje temporal en la parte superior
+        function showMessage(message, type = 'info') {
             messageBox.textContent = message;
-            messageBox.classList.remove('hidden', 'bg-red-900', 'text-red-300', 'bg-green-900', 'text-green-300', 'bg-yellow-900', 'text-yellow-300');
-            
+            messageBox.className = `fixed top-0 left-0 right-0 p-4 text-center z-50 transition-colors duration-300`;
+
             if (type === 'error') {
-                messageBox.classList.add('bg-red-900', 'text-red-300');
+                messageBox.classList.add('bg-red-700', 'text-white', 'block');
             } else if (type === 'success') {
-                messageBox.classList.add('bg-green-900', 'text-green-300');
-            } else { // info
-                messageBox.classList.add('bg-yellow-900', 'text-yellow-300');
+                messageBox.classList.add('bg-green-600', 'text-white', 'block');
+            } else {
+                messageBox.classList.add('bg-blue-600', 'text-white', 'block');
             }
-            messageBox.style.top = '4px'; 
+
             setTimeout(() => {
-                messageBox.classList.add('hidden');
-                messageBox.style.top = '-50px';
+                messageBox.classList.replace('block', 'hidden');
             }, 5000);
         }
 
-        function toggleAuthView() {
-            isLoginView = !isLoginView;
-            if (isLoginView) {
-                loginForm.classList.remove('hidden');
-                registerForm.classList.add('hidden');
-                authTitle.textContent = 'Iniciar Sesión para Jugar';
-                toggleLink.innerHTML = "¿No tienes una cuenta? Regístrate";
-            } else {
+        // Alterna entre la vista de Login y Registro
+        function toggleAuthView(isRegister = false) {
+            if (isRegister) {
                 loginForm.classList.add('hidden');
                 registerForm.classList.remove('hidden');
-                authTitle.textContent = 'Crea Tu Cuenta';
-                toggleLink.innerHTML = "¿Ya tienes una cuenta? Inicia Sesión";
-            }
-        }
-        
-        function switchView(showDashboard) {
-            if (showDashboard) {
-                authView.classList.remove('opacity-100', 'block');
-                authView.classList.add('opacity-0', 'hidden');
-                setTimeout(() => {
-                    dashboardView.classList.remove('opacity-0', 'hidden');
-                    dashboardView.classList.add('opacity-100', 'block');
-                }, 500); 
+                showLoginBtn.classList.replace('border-yellow-500', 'border-transparent');
+                showLoginBtn.classList.replace('text-white', 'text-gray-400');
+                showRegisterBtn.classList.replace('border-transparent', 'border-red-500');
+                showRegisterBtn.classList.replace('text-gray-400', 'text-white');
             } else {
-                dashboardView.classList.remove('opacity-100', 'block');
-                dashboardView.classList.add('opacity-0', 'hidden');
-                setTimeout(() => {
-                    authView.classList.remove('opacity-0', 'hidden');
-                    authView.classList.add('opacity-100', 'block');
-                }, 500); 
+                registerForm.classList.add('hidden');
+                loginForm.classList.remove('hidden');
+                showRegisterBtn.classList.replace('border-red-500', 'border-transparent');
+                showRegisterBtn.classList.replace('text-white', 'text-gray-400');
+                showLoginBtn.classList.replace('border-transparent', 'border-yellow-500');
+                showLoginBtn.classList.replace('text-gray-400', 'text-white');
             }
         }
 
-        function setSpinButtonState(disabled) {
-            spinBtn.disabled = disabled;
-            spinBtn.classList.toggle('disabled-btn', disabled);
-            betAmountInput.disabled = disabled;
-            betChoiceSelect.disabled = disabled;
+        // Alterna entre la vista de Autenticación y el Dashboard
+        function switchView(toDashboard) {
+            if (toDashboard) {
+                authView.classList.replace('block', 'hidden');
+                dashboardView.classList.replace('hidden', 'block');
+            } else {
+                dashboardView.classList.replace('block', 'hidden');
+                authView.classList.replace('hidden', 'block');
+                toggleAuthView(false); // Volver a la vista de Login por defecto
+            }
+        }
+
+        // --- Funciones de Firestore y Lógica de Negocio ---
+
+        // Escucha cambios en el saldo del usuario en tiempo real
+        function startBalanceListener(email) {
+            const userDocRef = doc(db, USERS_COLLECTION_PATH, email);
+
+            // onSnapshot se mantiene escuchando los cambios
+            onSnapshot(userDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    const balance = userData.balance || 0;
+                    currentBalanceEl.textContent = `$${balance.toFixed(2)}`;
+                    welcomeMessageEl.textContent = `¡Hola, ${userData.username || 'Jugador'}!`;
+                    console.log("Saldo actualizado en tiempo real:", balance);
+                } else {
+                    console.log("El documento del usuario ya no existe.");
+                }
+            }, (error) => {
+                console.error("Error al escuchar cambios del saldo:", error);
+                showMessage(`Error de conexión al balance: ${error.message}`, 'error');
+            });
+        }
+
+        // Actualiza el saldo en la base de datos
+        async function updateBalance(email, amount) {
+            if (!db) {
+                showMessage("La base de datos no está inicializada.", 'error');
+                return;
+            }
+
+            const userDocRef = doc(db, USERS_COLLECTION_PATH, email);
+            try {
+                // Obtener el saldo actual para asegurar una actualización precisa
+                const docSnap = await getDoc(userDocRef);
+                if (!docSnap.exists()) {
+                    showMessage("Error: No se encontró el documento del usuario para actualizar el saldo.", 'error');
+                    return false;
+                }
+                
+                const currentBalance = docSnap.data().balance || 0;
+                const newBalance = currentBalance + amount;
+                
+                if (newBalance < 0) {
+                    showMessage("¡Saldo insuficiente para esta apuesta!", 'error');
+                    return false;
+                }
+
+                await updateDoc(userDocRef, {
+                    balance: newBalance
+                });
+
+                // La actualización en la UI la maneja automáticamente startBalanceListener
+                return true;
+
+            } catch (error) {
+                console.error("Error al actualizar el saldo:", error);
+                showMessage(`Error al actualizar saldo: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // Simula el proceso de registro
+        async function registerUser(username, email, password, dni) {
+            if (!db) {
+                showMessage("La base de datos no está inicializada.", 'error');
+                return false;
+            }
+            if (!auth.currentUser) {
+                showMessage("Error de autenticación. Intenta recargar la página.", 'error');
+                return false;
+            }
+            
+            const userDocRef = doc(db, USERS_COLLECTION_PATH, email);
+            
+            try {
+                // 1. Verificar si el usuario ya existe
+                const docSnap = await getDoc(userDocRef);
+                if (docSnap.exists()) {
+                    showMessage("El correo electrónico ya está registrado. Intenta iniciar sesión.", 'error');
+                    return false;
+                }
+
+                // 2. Crear el nuevo documento de usuario
+                const initialBalance = 1000;
+                await setDoc(userDocRef, {
+                    username: username,
+                    email: email,
+                    // NOTA: La contraseña no se almacena en Firestore. Se almacena solo para simulación.
+                    // En un entorno real, Firebase Auth manejaría esto.
+                    password_hash_simulated: password.length, 
+                    dni: dni,
+                    balance: initialBalance,
+                    createdAt: new Date().toISOString(),
+                    userId: auth.currentUser.uid // Usamos el ID de la autenticación anónima
+                });
+
+                // 3. Iniciar la escucha del saldo y cambiar la vista
+                startBalanceListener(email);
+                switchView(true);
+                showMessage("¡Registro exitoso! Bienvenido al Casino.", 'success');
+                return true;
+
+            } catch (error) {
+                console.error("Error al registrar el usuario en Firestore:", error);
+                showMessage(`Error de registro: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // Simula el proceso de inicio de sesión
+        async function loginUser(email, password) {
+            if (!db) {
+                showMessage("La base de datos no está inicializada.", 'error');
+                return;
+            }
+
+            const userDocRef = doc(db, USERS_COLLECTION_PATH, email);
+            try {
+                const docSnap = await getDoc(userDocRef);
+
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    
+                    // Simulación de verificación de contraseña (en la vida real usarías Firebase Auth)
+                    if (userData.password_hash_simulated !== password.length) {
+                         showMessage("Contraseña incorrecta.", 'error');
+                         return;
+                    }
+
+                    // Iniciar la escucha del saldo y cambiar la vista
+                    startBalanceListener(email);
+                    switchView(true);
+                    showMessage(`¡Bienvenido de vuelta, ${userData.username}!`, 'success');
+
+                } else {
+                    showMessage("Usuario no encontrado. Por favor regístrate.", 'error');
+                }
+            } catch (error) {
+                console.error("Error durante el inicio de sesión:", error);
+                showMessage(`Error de inicio de sesión: ${error.message}`, 'error');
+            }
+        }
+
+        // --- Lógica de Ruleta ---
+
+        const colors = [
+            'green', 'red', 'black', 'red', 'black', 'red', 'black', 'red', 'black', 'red', 'black',
+            'red', 'black', 'red', 'black', 'red', 'black', 'red', 'black', 'red', 'black',
+            'red', 'black', 'red', 'black', 'red', 'black', 'red', 'black', 'red', 'black',
+            'red', 'black', 'red', 'black', 'red', 'black', 'red'
+        ];
+        
+        // Mapea el color con el factor de ganancia
+        const winMultipliers = {
+            'green': 35,
+            'red': 2,
+            'black': 2
+        };
+
+        const resultColorMap = {
+             0: 'green', 1: 'red', 2: 'black', 3: 'red', 4: 'black', 5: 'red', 6: 'black',
+             7: 'red', 8: 'black', 9: 'red', 10: 'black', 11: 'red', 12: 'black',
+             13: 'red', 14: 'black', 15: 'red', 16: 'black', 17: 'red', 18: 'black',
+             19: 'red', 20: 'black', 21: 'red', 22: 'black', 23: 'red', 24: 'black',
+             25: 'red', 26: 'black', 27: 'red', 28: 'black', 29: 'red', 30: 'black',
+             31: 'red', 32: 'black', 33: 'red', 34: 'black', 35: 'red', 36: 'black',
+             37: 'green' // 37 no se usa, pero por si acaso.
+        };
+
+        function calculateWinnings(betType, betAmount, winningNumber) {
+            const winningColor = resultColorMap[winningNumber % 37]; // 0-36
+            
+            if (betType === winningColor) {
+                const multiplier = winMultipliers[betType];
+                return betAmount * multiplier; // Retorna la ganancia total
+            }
+            return 0; // Pérdida
+        }
+
+        async function spinRoulette() {
+            spinBtn.disabled = true;
+            spinBtn.classList.add('disabled-btn');
+
+            const betAmount = parseFloat(betAmountInput.value);
+            const betType = betTypeSelect.value;
+            const currentBalanceText = currentBalanceEl.textContent.replace('$', '');
+            const currentBalance = parseFloat(currentBalanceText);
+            const userEmail = document.getElementById('login-email').value || document.getElementById('register-email').value;
+
+            if (isNaN(betAmount) || betAmount <= 0) {
+                showMessage("La cantidad de la apuesta debe ser un número positivo.", 'error');
+                spinBtn.disabled = false;
+                spinBtn.classList.remove('disabled-btn');
+                return;
+            }
+
+            if (betAmount > currentBalance) {
+                showMessage("¡Saldo insuficiente para apostar esa cantidad!", 'error');
+                spinBtn.disabled = false;
+                spinBtn.classList.remove('disabled-btn');
+                return;
+            }
+
+            // 1. Descontar la apuesta inmediatamente
+            const deductionSuccess = await updateBalance(userEmail, -betAmount);
+            if (!deductionSuccess) {
+                 spinBtn.disabled = false;
+                 spinBtn.classList.remove('disabled-btn');
+                 return;
+            }
+
+            // 2. Lógica de Giro
+            const winningNumber = Math.floor(Math.random() * 37); // 0 a 36
+            const winningColor = resultColorMap[winningNumber];
+            
+            // Cada número ocupa 360/37 grados. Queremos que el marcador apunte al centro del sector.
+            // Posición final (grados): el número ganador está en un sector. Multiplicamos su índice por 360/37.
+            // Añadimos muchas vueltas (7-10 vueltas completas) para el efecto visual.
+            const sectorAngle = 360 / 37;
+            const rotationDegrees = (360 * 8) + (360 - (winningNumber * sectorAngle + sectorAngle / 2));
+            
+            // 3. Aplicar rotación y esperar
+            rouletteWheel.style.transition = 'transform 6s cubic-bezier(0.25, 0.1, 0.25, 1)';
+            rouletteWheel.style.transform = `rotate(${rotationDegrees}deg)`;
+
+            // Esperar a que termine la animación
+            setTimeout(async () => {
+                // 4. Calcular ganancias
+                const winnings = calculateWinnings(betType, betAmount, winningNumber);
+
+                if (winnings > 0) {
+                    // Si gana, sumamos la ganancia (que incluye la apuesta inicial)
+                    const profit = winnings - betAmount;
+                    await updateBalance(userEmail, profit);
+                    showMessage(`¡GANASTE! Cayó en el ${winningNumber} (${winningColor}). Ganancia: $${profit.toFixed(2)}`, 'success');
+                } else {
+                    // Si pierde, la apuesta ya fue deducida
+                    showMessage(`PERDISTE. Cayó en el ${winningNumber} (${winningColor}).`, 'error');
+                }
+
+                // 5. Restablecer el botón y la rotación visual
+                spinBtn.disabled = false;
+                spinBtn.classList.remove('disabled-btn');
+                
+                // Resetear la transición para que el próximo giro sea suave
+                rouletteWheel.style.transition = 'none';
+                // Dejar la ruleta en un ángulo para que parezca que "terminó"
+                rouletteWheel.style.transform = `rotate(${rotationDegrees % 360}deg)`; 
+
+            }, 6500); // 6.5 segundos para la animación
         }
 
         // --- FIREBASE: Inicialización y Autenticación ---
         
         async function initializeFirebase() {
             try {
-                // **CRÍTICO: Nueva verificación**
-                if (!Object.keys(firebaseConfig).length) {
-                    console.error("Firebase Config no está disponible. Los botones de auth permanecerán deshabilitados.");
-                    showMessage("Error de configuración de Firebase. La app no puede guardar datos. Recarga la página.", 'error');
-                    
-                    // Asegurarse de que los botones de Auth permanezcan deshabilitados
-                    loginBtn.disabled = true;
-                    loginBtn.classList.add('disabled-btn');
-                    registerBtn.disabled = true;
-                    registerBtn.classList.add('disabled-btn');
-                    return; // Detiene la ejecución si la config falla
-                }
-                
                 const app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
                 db = getFirestore(app);
 
+                // Forzamos la autenticación anónima para obtener un ID de usuario
                 if (initialAuthToken) {
                     await signInWithCustomToken(auth, initialAuthToken);
                 } else {
@@ -446,277 +597,52 @@
                     } else {
                         userId = null;
                         currentUserIdDisplay.textContent = 'No autenticado';
-                        // Si el usuario cierra sesión, asegurarnos de volver a Auth
                         if (dashboardView.classList.contains('block')) {
                             switchView(false);
                         }
                     }
                 });
 
-                // Habilitar botones de autenticación solo después de inicializar
+                // Habilitar botones de autenticación SOLO SI HAY ÉXITO EN LA INICIALIZACIÓN
                 loginBtn.disabled = false;
                 loginBtn.classList.remove('disabled-btn');
                 registerBtn.disabled = false;
                 registerBtn.classList.remove('disabled-btn');
-                showMessage("Sistema listo. Puedes iniciar sesión o registrarte.", 'success');
+                
+                if (firebaseConfig.projectId === "simulated-project") {
+                    showMessage("Advertencia: Conectado en modo de RESPALDO. Por favor, regístrese/inicie sesión para usar Firestore.", 'error');
+                } else {
+                    showMessage("Sistema listo. Puedes iniciar sesión o registrarte.", 'success');
+                }
 
 
             } catch (error) {
                 console.error("Error al inicializar o autenticar Firebase:", error);
-                showMessage(`Error de configuración: ${error.message}`, 'error');
-            }
-        }
-        
-        // --- FIRESTORE: Funciones de Guardar y Cargar Datos ---
-        
-        function startBalanceListener(email) {
-            if (unsubscribeBalance) {
-                unsubscribeBalance();
-            }
-
-            const userDocRef = doc(db, USERS_COLLECTION_PATH, email);
-
-            unsubscribeBalance = onSnapshot(userDocRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    currentBalance = data.balance || 0;
-                    const newBalance = currentBalance.toFixed(2);
-                    displayBalance.textContent = `$${newBalance}`;
-                    displayUsername.textContent = data.username || 'Jugador';
-                    
-                    // Control de saldo para el juego
-                    const betAmount = parseFloat(betAmountInput.value) || 0;
-                    const canSpin = !isSpinning && currentBalance >= betAmount && betAmount > 0;
-                    setSpinButtonState(!canSpin);
-                    
-                } else {
-                    console.log("Documento de usuario no encontrado. Volviendo a la vista de autenticación.");
-                    // Detener escucha si el documento desaparece
-                    if (unsubscribeBalance) unsubscribeBalance(); 
-                }
-            }, (error) => {
-                console.error("Error al escuchar cambios en el saldo:", error);
-                showMessage(`Error de conexión: ${error.message}`, 'error');
-            });
-        }
-        
-        async function registerUser(username, email, password) {
-            if (!db || !userId) return showMessage('Sistema no listo.', 'error');
-            try {
-                // 1. Verificar si el email ya existe
-                const usersRef = collection(db, USERS_COLLECTION_PATH);
-                const q = query(usersRef, where("email", "==", email));
-                const querySnapshot = await getDocs(q);
-
-                if (!querySnapshot.empty) {
-                    showMessage('El correo electrónico ya está registrado. Intenta iniciar sesión.', 'error');
-                    return false;
-                }
-
-                // 2. Crear el documento de usuario
-                const userDocRef = doc(db, USERS_COLLECTION_PATH, email);
-                const userData = {
-                    username: username,
-                    email: email,
-                    simulatedPasswordHash: password.length, // Usamos la longitud como hash simulado
-                    balance: 1000.00, // Saldo inicial
-                    creationDate: new Date().toISOString(),
-                };
-
-                await setDoc(userDocRef, userData);
-                showMessage(`¡Registro exitoso para ${username}! Saldo inicial: $1000.00`, 'success');
-                return true;
-
-            } catch (error) {
-                console.error("Error al registrar el usuario en Firestore:", error);
-                showMessage(`Error de registro en Firestore: ${error.message}`, 'error');
-                return false;
+                
+                // ********* CORRECCIÓN CRÍTICA APLICADA *********
+                // Habilitamos los botones incluso si la conexión falla para poder probar la lógica del formulario
+                loginBtn.disabled = false;
+                loginBtn.classList.remove('disabled-btn');
+                registerBtn.disabled = false;
+                registerBtn.classList.remove('disabled-btn');
+                // ***********************************************
+                
+                showMessage(`Error de configuración FINAL: ${error.name}: ${error.message}. Los botones están activos para prueba.`, 'error');
             }
         }
 
-        async function loginUser(email, password) {
-            if (!db || !userId) return showMessage('Sistema no listo.', 'error');
+        // --- Manejadores de Eventos de Autenticación y Ruleta ---
 
-            try {
-                const userDocRef = doc(db, USERS_COLLECTION_PATH, email);
-                const docSnap = await getDoc(userDocRef);
+        // Alterna entre Iniciar Sesión y Registrarse
+        showLoginBtn.addEventListener('click', () => toggleAuthView(false));
+        showRegisterBtn.addEventListener('click', () => toggleAuthView(true));
 
-                if (!docSnap.exists()) {
-                    showMessage('Usuario no encontrado o credenciales incorrectas.', 'error');
-                    return false;
-                }
-                
-                const userData = docSnap.data();
-
-                if (userData.simulatedPasswordHash !== password.length) {
-                    showMessage('Contraseña incorrecta.', 'error');
-                    return false;
-                }
-
-                userEmail = email; 
-                startBalanceListener(email); // Iniciar la escucha en tiempo real
-                switchView(true);
-                showMessage(`¡Bienvenido, ${userData.username}!`, 'success');
-                return true;
-
-            } catch (error) {
-                console.error("Error al iniciar sesión y cargar datos:", error);
-                showMessage(`Error de inicio de sesión: ${error.message}`, 'error');
-                return false;
-            }
-        }
-        
-        async function updateBalance(amount) {
-            if (!db || !userEmail) return showMessage('No hay usuario activo para actualizar.', 'error');
-
-            try {
-                const userDocRef = doc(db, USERS_COLLECTION_PATH, userEmail);
-                
-                // Obtenemos el saldo más reciente antes de actualizar
-                const docSnap = await getDoc(userDocRef);
-                if (!docSnap.exists()) return;
-                
-                const currentBalance = docSnap.data().balance || 0;
-                const newBalance = currentBalance + amount;
-
-                if (newBalance < 0) {
-                     return showMessage('Saldo insuficiente para esta operación.', 'error');
-                }
-
-                await updateDoc(userDocRef, {
-                    balance: newBalance,
-                    lastUpdate: new Date().toISOString()
-                });
-                
-                // onSnapshot se encargará de actualizar la UI
-                return true;
-
-            } catch (error) {
-                console.error("Error al actualizar el saldo:", error);
-                showMessage(`Error al actualizar saldo: ${error.message}`, 'error');
-                return false;
-            }
-        }
-
-        // --- LÓGICA DEL JUEGO DE LA RULETA ---
-        
-        /**
-         * Determina el resultado de la ruleta y la ganancia/pérdida.
-         * @param {number} bet - Cantidad apostada.
-         * @param {string} choice - 'red', 'black', o 'green'.
-         */
-        function playRoulette(bet, choice) {
-            // Selecciona un número al azar de los 18 segmentos
-            const winningPocket = ROULETTE_POCKETS[Math.floor(Math.random() * ROULETTE_POCKETS.length)];
-            const winningColor = winningPocket.color;
-            const winningNumber = winningPocket.number;
-
-            let resultAmount = -bet; // Por defecto, se pierde la apuesta
-            let win = false;
-            
-            // Comprueba si el color ganador coincide con la apuesta
-            if (winningColor === choice) {
-                win = true;
-                // Multiplicador (2x para R/B, 15x para Green/0)
-                const multiplier = winningPocket.multiplier;
-                resultAmount = bet * multiplier - bet; // Se resta la apuesta inicial para obtener solo la ganancia neta
-                showMessage(`¡GANASTE! Cayó en ${winningNumber} (${winningColor}). Ganas $${resultAmount.toFixed(2)}.`, 'success');
-            } else {
-                showMessage(`Perdiste. Cayó en ${winningNumber} (${winningColor}). Pierdes $${bet.toFixed(2)}.`, 'error');
-            }
-
-            // Calculamos el ángulo de giro (apuntamos al centro del segmento ganador)
-            const winningIndex = ROULETTE_POCKETS.findIndex(p => p.number === winningNumber);
-            const baseAngle = winningIndex * 20; 
-            const totalRotations = 5 * 360; 
-            const finalAngle = totalRotations - baseAngle; 
-
-            // Aplicar el giro CSS
-            rouletteWheel.style.transition = 'transform 5s cubic-bezier(0.25, 0.1, 0.25, 1)';
-            rouletteWheel.style.transform = `rotate(${finalAngle}deg)`;
-
-            // Deshabilitar el botón durante el giro
-            isSpinning = true;
-            setSpinButtonState(true);
-            resultText.textContent = `¡Girando! Apostaste a ${choice.toUpperCase()}...`;
-            
-            // Una vez que el giro termina (5 segundos después)
-            setTimeout(async () => {
-                // 1. Actualizar el saldo en Firestore
-                await updateBalance(resultAmount);
-                
-                // 2. Mostrar el resultado final
-                const winLoss = resultAmount >= 0 ? `Ganancia: +$${resultAmount.toFixed(2)}` : `Pérdida: -$${Math.abs(resultAmount).toFixed(2)}`;
-                resultText.innerHTML = `¡Resultado: ${winningNumber} (${winningColor.toUpperCase()})! <span class="${win ? 'text-green-400' : 'text-red-400'}">${winLoss}</span>`;
-
-                // 3. Restaurar el estado
-                isSpinning = false;
-                // Llama al listener para reevaluar si puede volver a girar
-                if(userEmail) startBalanceListener(userEmail); 
-                
-                // 4. Limpiar la transición para el próximo giro
-                setTimeout(() => {
-                    rouletteWheel.style.transition = 'none';
-                }, 500); 
-
-            }, 5000); // Duración del giro CSS
-        }
-
-
-        // --- Manejadores de Eventos del Dashboard ---
-
-        logoutBtn.addEventListener('click', async () => {
-            if (unsubscribeBalance) {
-                unsubscribeBalance();
-                unsubscribeBalance = null;
-            }
-            userEmail = null;
-            await signOut(auth); 
-            switchView(false); 
-            showMessage("Sesión cerrada correctamente.", 'info');
-        });
-
-        // Manejador de simulación de depósito: sumar $100
-        simulateDepositBtn.addEventListener('click', () => {
-            updateBalance(100);
-            showMessage("Depositando $100.00...", 'info');
-        });
-        
-        // Manejador de la Ruleta
-        spinBtn.addEventListener('click', () => {
-            const betAmount = parseFloat(betAmountInput.value);
-            const betChoice = betChoiceSelect.value;
-            
-            if (isSpinning) {
-                return; // Ignorar clic si ya está girando
-            }
-
-            if (isNaN(betAmount) || betAmount <= 0) {
-                return showMessage("Ingresa una cantidad de apuesta válida.", 'error');
-            }
-
-            if (betAmount > currentBalance) {
-                return showMessage("Saldo insuficiente para esta apuesta.", 'error');
-            }
-            
-            // Iniciar la lógica de juego
-            playRoulette(betAmount, betChoice);
-        });
-
-        // Reevaluar el estado del botón al cambiar la apuesta
-        betAmountInput.addEventListener('input', () => {
-            const betAmount = parseFloat(betAmountInput.value) || 0;
-            const canSpin = !isSpinning && currentBalance >= betAmount && betAmount > 0;
-            setSpinButtonState(!canSpin);
-        });
-        
-        // --- Manejadores de Eventos de Autenticación ---
-
+        // Formulario de REGISTRO
         registerForm.addEventListener('submit', async function(event) {
             event.preventDefault();
-            const btn = registerBtn; // Usamos la referencia global
+            const btn = registerBtn;
             
-            // 1. Deshabilitar inmediatamente el botón y mostrar el estado de carga
+            // 1. Deshabilitar inmediatamente el botón
             btn.disabled = true;
             btn.classList.add('disabled-btn');
             btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2 mt-1"></i> Registrando...';
@@ -724,18 +650,19 @@
             const username = document.getElementById('register-username').value;
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
+            const dni = document.getElementById('register-dni').value; // Usamos DNI aquí
             
             try {
                 if (password.length < 6) {
                     showMessage('La contraseña debe tener al menos 6 caracteres.', 'error');
-                    return; // Detener la función aquí si la validación falla
+                    return; 
                 }
                 
                 // 2. Intentar el registro en Firestore
-                const success = await registerUser(username, email, password);
+                const success = await registerUser(username, email, password, dni);
 
                 if (success) {
-                    toggleAuthView(); 
+                    // Si es exitoso, loginUser ya cambió la vista y la escucha está activa.
                 }
             } catch (error) {
                 console.error("Error durante el proceso de registro:", error);
@@ -748,23 +675,34 @@
             }
         });
 
+        // Formulario de LOGIN
         loginForm.addEventListener('submit', async function(event) {
             event.preventDefault();
-            const btn = loginBtn; // Usamos la referencia global
+            const btn = loginBtn;
+            
             btn.disabled = true;
             btn.classList.add('disabled-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2 mt-1"></i> Iniciando...';
 
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
             
             await loginUser(email, password);
             
+            // Restaurar el botón
             btn.disabled = false;
             btn.classList.remove('disabled-btn');
+            btn.innerHTML = '<i class="fas fa-arrow-right mr-2 mt-1"></i> Iniciar Sesión';
         });
         
-        // Listener de evento para el enlace de alternar
-        toggleLink.addEventListener('click', toggleAuthView);
+        // Botones de Dashboard
+        spinBtn.addEventListener('click', spinRoulette);
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+             // Simulación de cierre de sesión: solo cambia la vista
+             switchView(false);
+             showMessage("Sesión cerrada. ¡Vuelve pronto!", 'info');
+        });
 
         // Iniciar Firebase al cargar el script
         initializeFirebase();
