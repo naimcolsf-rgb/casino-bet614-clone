@@ -3,162 +3,532 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso / Registro - Stake Clone</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Casino Royale - Dashboard</title>
+    <!-- Cargar Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Estilos específicos de la página de autenticación */
+        /* Estilos personalizados para un tema de casino lujoso y oscuro */
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c;
+            background-image: radial-gradient(circle at center, #2d3748 0%, #1a202c 100%);
             min-height: 100vh;
-        }
-        .auth-card {
-            background-color: var(--bg-medium);
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-            width: 400px;
-            text-align: center;
-        }
-        .auth-tabs {
             display: flex;
-            margin-bottom: 25px;
-            border-bottom: 2px solid #333;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.5s;
         }
-        .auth-tabs button {
-            flex: 1;
-            padding: 15px 10px;
-            background: transparent;
-            color: var(--text-muted);
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            border-bottom: 2px solid transparent;
-            transition: all 0.3s;
+        /* Clase para simular estado de carga/inactivo */
+        .disabled-btn {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
-        .auth-tabs button.active {
-            color: var(--accent-green);
-            border-bottom-color: var(--accent-green);
-        }
-        .auth-tabs button:hover:not(.active) {
-            color: var(--text-light);
-        }
-        
-        .auth-form-container {
-            position: relative;
-            height: 300px; /* Altura fija para evitar saltos de layout */
-            overflow: hidden;
-        }
-        .auth-form {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
-            opacity: 0;
-            pointer-events: none;
-        }
-        .auth-form.active {
-            opacity: 1;
-            pointer-events: all;
-            transform: translateX(0);
-        }
-        /* Mover el formulario inactivo a la derecha */
-        #login-form:not(.active) { transform: translateX(-100%); }
-        #register-form:not(.active) { transform: translateX(100%); }
-
-        .input-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        .input-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-        .input-group input {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--bg-dark);
-            border: 1px solid #333;
-            color: var(--text-light);
-            border-radius: 6px;
-        }
-        .auth-submit-btn {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--accent-green);
-            color: var(--bg-dark);
-            border: none;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 15px;
-            transition: background-color 0.2s;
-        }
-        .auth-submit-btn:hover {
-            background-color: #00d200;
-        }
-        .back-link {
-            margin-top: 25px;
-            font-size: 13px;
-        }
-        .back-link a {
-            color: var(--accent-blue);
-            text-decoration: none;
-        }
-        
     </style>
 </head>
-<body>
-    <div class="auth-card">
-        <div class="auth-tabs">
-            <button id="tab-login" class="active">Iniciar Sesión</button>
-            <button id="tab-register">Registrarse</button>
-        </div>
+<body class="p-4">
 
-        <div class="auth-form-container">
-            
-            <form id="login-form" class="auth-form active">
-                <div class="input-group">
-                    <label for="login-username">Usuario</label>
-                    <input type="text" id="login-username" required>
-                </div>
-                <div class="input-group">
-                    <label for="login-password">Contraseña</label>
-                    <input type="password" id="login-password" required>
-                </div>
-                <button type="submit" class="auth-submit-btn">Ingresar</button>
-            </form>
-            
-            <form id="register-form" class="auth-form">
-                <div class="input-group">
-                    <label for="reg-username">Usuario</label>
-                    <input type="text" id="reg-username" required>
-                </div>
-                <div class="input-group">
-                    <label for="reg-email">Correo Electrónico</label>
-                    <input type="email" id="reg-email" required>
-                </div>
-                <div class="input-group">
-                    <label for="reg-password">Contraseña</label>
-                    <input type="password" id="reg-password" required>
-                </div>
-                <div class="input-group">
-                    <label for="reg-dni">DNI</label>
-                    <input type="text" id="reg-dni" required>
-                </div>
-                <button type="submit" class="auth-submit-btn">Registrarse y Obtener Bono</button>
-            </form>
+    <!-- Contenedor Principal de la Aplicación -->
+    <div id="app-container" class="w-full max-w-4xl bg-gray-800 p-8 md:p-10 rounded-xl shadow-2xl transition-all duration-300 border-t-4 border-yellow-600">
+
+        <!-- Caja de Mensajes de Estado (Global) -->
+        <div id="message-box" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 p-3 rounded-lg text-center font-semibold z-50 min-w-[300px] transition-all duration-300" role="alert">
+            <!-- Los mensajes se muestran aquí -->
         </div>
         
-        <div class="back-link">
-            <a href="index.html">Volver al Casino</a>
+        <!-- ============================================== -->
+        <!-- 1. VISTA DE AUTENTICACIÓN (Inicio de Sesión/Registro) -->
+        <!-- ============================================== -->
+        <div id="auth-view" class="transition-opacity duration-500 opacity-100 block">
+             <div class="text-center mb-8">
+                <i class="fas fa-crown text-4xl text-yellow-500 mb-2 animate-pulse"></i>
+                <h1 class="text-3xl font-extrabold text-white tracking-wider">
+                    AUTENTICACIÓN
+                </h1>
+                <p id="auth-title" class="text-yellow-400 text-lg mt-2 font-medium">Iniciar Sesión para Jugar</p>
+            </div>
+            
+            <!-- ID de Usuario (Para demostración de Firestore) -->
+            <p id="user-id-display" class="text-center text-xs text-gray-400 mb-4 hidden">
+                ID de Sesión: <span id="current-user-id" class="font-mono text-yellow-500 break-all">...</span>
+            </p>
+
+            <!-- Formulario de Inicio de Sesión -->
+            <form id="login-form" class="space-y-6">
+                <div>
+                    <label for="login-email" class="block text-sm font-medium text-gray-300">Correo Electrónico</label>
+                    <div class="mt-1">
+                        <input id="login-email" name="email" type="email" required autocomplete="email"
+                            class="appearance-none block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 bg-gray-700 text-white transition duration-150 ease-in-out sm:text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="login-password" class="block text-sm font-medium text-gray-300">Contraseña</label>
+                    <div class="mt-1">
+                        <input id="login-password" name="password" type="password" required autocomplete="current-password"
+                            class="appearance-none block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 bg-gray-700 text-white transition duration-150 ease-in-out sm:text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <button id="login-btn" type="submit"
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-lg text-base font-bold text-gray-900 bg-yellow-500 hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition duration-150 ease-in-out transform hover:scale-[1.02]">
+                        <i class="fas fa-sign-in-alt mr-2 mt-1"></i>
+                        Iniciar Sesión
+                    </button>
+                </div>
+            </form>
+
+            <!-- Formulario de Registro (Inicialmente oculto) -->
+            <form id="register-form" class="space-y-6 hidden">
+                <div>
+                    <label for="register-username" class="block text-sm font-medium text-gray-300">Nombre de Usuario</label>
+                    <div class="mt-1">
+                        <input id="register-username" name="username" type="text" required autocomplete="username"
+                            class="appearance-none block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 bg-gray-700 text-white transition duration-150 ease-in-out sm:text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="register-email" class="block text-sm font-medium text-gray-300">Correo Electrónico</label>
+                    <div class="mt-1">
+                        <input id="register-email" name="email" type="email" required autocomplete="email"
+                            class="appearance-none block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 bg-gray-700 text-white transition duration-150 ease-in-out sm:text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="register-password" class="block text-sm font-medium text-gray-300">Contraseña</label>
+                    <div class="mt-1">
+                        <input id="register-password" name="password" type="password" required autocomplete="new-password"
+                            class="appearance-none block w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 bg-gray-700 text-white transition duration-150 ease-in-out sm:text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <button id="register-btn" type="submit"
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-lg text-base font-bold text-gray-900 bg-red-600 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 transition duration-150 ease-in-out transform hover:scale-[1.02]">
+                        <i class="fas fa-user-plus mr-2 mt-1"></i>
+                        Registrarse
+                    </button>
+                </div>
+            </form>
+
+            <!-- Enlace para cambiar de vista -->
+            <p class="mt-6 text-center text-sm text-gray-400">
+                <button id="toggle-auth-link" class="font-medium text-yellow-500 hover:text-yellow-400 focus:outline-none">
+                    ¿No tienes una cuenta? Regístrate
+                </button>
+            </p>
         </div>
+
+        <!-- ============================================== -->
+        <!-- 2. VISTA DEL DASHBOARD (Juego) -->
+        <!-- ============================================== -->
+        <div id="dashboard-view" class="transition-opacity duration-500 opacity-0 hidden">
+            <header class="flex justify-between items-center pb-6 border-b border-gray-700 mb-6">
+                <h2 class="text-3xl font-extrabold text-white">
+                    Bienvenido, <span id="display-username" class="text-yellow-400">Jugador</span>
+                </h2>
+                <button id="logout-btn" class="text-sm text-red-400 hover:text-red-300 transition duration-150">
+                    <i class="fas fa-sign-out-alt mr-1"></i> Cerrar Sesión
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Tarjeta de Saldo (Real-Time Data) -->
+                <div class="md:col-span-1 bg-gray-700 p-6 rounded-xl shadow-lg border-l-4 border-yellow-500">
+                    <p class="text-sm font-medium text-gray-300">SALDO ACTUAL</p>
+                    <div class="flex items-center mt-2">
+                        <i class="fas fa-coins text-3xl text-yellow-500 mr-3"></i>
+                        <span id="display-balance" class="text-4xl font-bold text-white tracking-wide">
+                            $0.00
+                        </span>
+                    </div>
+                    <p class="text-xs mt-2 text-gray-400">El saldo se actualiza en tiempo real.</p>
+                </div>
+
+                <!-- Contenedor del Juego (Simulación) -->
+                <div class="md:col-span-2 bg-gray-900 p-6 rounded-xl shadow-inner border border-gray-700 flex flex-col justify-center items-center">
+                    <h3 class="text-2xl font-semibold text-white mb-4">¡Elige tu Juego!</h3>
+                    <p class="text-gray-400 mb-6 text-center">Aquí integraremos la Ruleta, BlackJack o Máquinas Tragamonedas.</p>
+                    
+                    <button id="simulate-game-btn" class="px-6 py-3 bg-green-600 text-white font-bold rounded-lg hover:bg-green-500 transition duration-150 transform hover:scale-[1.05] shadow-lg disabled-btn" disabled>
+                        <i class="fas fa-dice mr-2"></i> Simular Juego (-$10)
+                    </button>
+                    
+                    <button id="simulate-deposit-btn" class="mt-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-500 transition duration-150">
+                        <i class="fas fa-plus-circle mr-2"></i> Simular Depósito (+$50)
+                    </button>
+                </div>
+            </div>
+            
+            <p class="text-xs text-center text-gray-600 mt-8">Nota: Los datos de usuario se guardan en la colección pública de Firestore.</p>
+        </div>
+
     </div>
-    
-    <script src="auth.js"></script>
+
+    <script type="module">
+        // Importaciones de Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, query, where, collection, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- Variables Globales Proporcionadas por el Entorno ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-casino-app';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : undefined;
+
+        // Referencias a elementos del DOM
+        const authView = document.getElementById('auth-view');
+        const dashboardView = document.getElementById('dashboard-view');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const toggleLink = document.getElementById('toggle-auth-link');
+        const authTitle = document.getElementById('auth-title');
+        const messageBox = document.getElementById('message-box');
+        const currentUserIdDisplay = document.getElementById('current-user-id');
+        const userIdContainer = document.getElementById('user-id-display');
+        
+        // Elementos del Dashboard
+        const displayUsername = document.getElementById('display-username');
+        const displayBalance = document.getElementById('display-balance');
+        const logoutBtn = document.getElementById('logout-btn');
+        const simulateGameBtn = document.getElementById('simulate-game-btn');
+        const simulateDepositBtn = document.getElementById('simulate-deposit-btn');
+
+        let isLoginView = true;
+        let db;
+        let auth;
+        let userId = null;
+        let userEmail = null; // Necesario para identificar el documento en Firestore
+        let unsubscribeBalance = null; // Para detener la escucha en tiempo real de Firestore
+
+        // Ruta base para los datos de la colección de 'usuarios'
+        const USERS_COLLECTION_PATH = `/artifacts/${appId}/public/data/users`;
+
+        // --- UTILS: Funciones de Interfaz de Usuario ---
+
+        function showMessage(message, type = 'error') {
+            messageBox.textContent = message;
+            messageBox.classList.remove('hidden', 'bg-red-900', 'text-red-300', 'bg-green-900', 'text-green-300', 'bg-yellow-900', 'text-yellow-300');
+            
+            if (type === 'error') {
+                messageBox.classList.add('bg-red-900', 'text-red-300');
+            } else if (type === 'success') {
+                messageBox.classList.add('bg-green-900', 'text-green-300');
+            } else { // info
+                messageBox.classList.add('bg-yellow-900', 'text-yellow-300');
+            }
+            messageBox.style.top = '4px'; // Asegura que esté visible
+            setTimeout(() => {
+                messageBox.classList.add('hidden');
+                messageBox.style.top = '-50px';
+            }, 5000);
+        }
+
+        function toggleAuthView() {
+            isLoginView = !isLoginView;
+            if (isLoginView) {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                authTitle.textContent = 'Iniciar Sesión para Jugar';
+                toggleLink.innerHTML = "¿No tienes una cuenta? Regístrate";
+            } else {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                authTitle.textContent = 'Crea Tu Cuenta';
+                toggleLink.innerHTML = "¿Ya tienes una cuenta? Inicia Sesión";
+            }
+        }
+        
+        // Función para cambiar de vista (Auth <-> Dashboard)
+        function switchView(showDashboard) {
+            if (showDashboard) {
+                authView.classList.remove('opacity-100', 'block');
+                authView.classList.add('opacity-0', 'hidden');
+                
+                setTimeout(() => {
+                    dashboardView.classList.remove('opacity-0', 'hidden');
+                    dashboardView.classList.add('opacity-100', 'block');
+                }, 500); // Espera la transición de opacidad
+            } else {
+                dashboardView.classList.remove('opacity-100', 'block');
+                dashboardView.classList.add('opacity-0', 'hidden');
+                
+                setTimeout(() => {
+                    authView.classList.remove('opacity-0', 'hidden');
+                    authView.classList.add('opacity-100', 'block');
+                }, 500); // Espera la transición de opacidad
+            }
+        }
+
+        // --- FIREBASE: Inicialización y Autenticación ---
+        
+        async function initializeFirebase() {
+            try {
+                if (!Object.keys(firebaseConfig).length) {
+                    console.error("Firebase Config no está disponible.");
+                    return;
+                }
+                
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        currentUserIdDisplay.textContent = userId;
+                        userIdContainer.classList.remove('hidden');
+                    } else {
+                        userId = null;
+                        currentUserIdDisplay.textContent = 'No autenticado';
+                    }
+                });
+
+                // Habilitar botones una vez que Firebase esté listo
+                document.getElementById('login-btn').disabled = false;
+                document.getElementById('register-btn').disabled = false;
+
+            } catch (error) {
+                console.error("Error al inicializar o autenticar Firebase:", error);
+                showMessage(`Error de configuración: ${error.message}`, 'error');
+            }
+        }
+        
+        // --- FIRESTORE: Funciones de Guardar y Cargar Datos ---
+        
+        /**
+         * 🚨 FUNCIÓN CRUCIAL: Escucha cambios en tiempo real del saldo.
+         * @param {string} email - Email del usuario (ID del documento).
+         */
+        function startBalanceListener(email) {
+            // Si ya hay un listener activo, lo detenemos primero
+            if (unsubscribeBalance) {
+                unsubscribeBalance();
+            }
+
+            const userDocRef = doc(db, USERS_COLLECTION_PATH, email);
+
+            // onSnapshot crea una conexión en tiempo real
+            unsubscribeBalance = onSnapshot(userDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    const newBalance = (data.balance || 0).toFixed(2);
+                    displayBalance.textContent = `$${newBalance}`;
+                    displayUsername.textContent = data.username || 'Jugador';
+                    
+                    // Habilitar botón de juego si hay saldo suficiente
+                    simulateGameBtn.disabled = data.balance < 10;
+                    simulateGameBtn.classList.toggle('disabled-btn', data.balance < 10);
+                    
+                } else {
+                    console.log("Documento de usuario no encontrado después del inicio de sesión.");
+                    showMessage("Error al cargar los datos en tiempo real.", 'error');
+                }
+            }, (error) => {
+                console.error("Error al escuchar cambios en el saldo:", error);
+                showMessage(`Error de conexión: ${error.message}`, 'error');
+            });
+        }
+        
+        /**
+         * Simula el registro: Crea un documento de usuario en Firestore.
+         */
+        async function registerUser(username, email, password) {
+            if (!db || !userId) return showMessage('Sistema no listo.', 'error');
+            try {
+                const usersRef = collection(db, USERS_COLLECTION_PATH);
+                const q = query(usersRef, where("email", "==", email));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    showMessage('El correo electrónico ya está registrado.', 'error');
+                    return false;
+                }
+
+                const userDocRef = doc(db, USERS_COLLECTION_PATH, email);
+                const userData = {
+                    username: username,
+                    email: email,
+                    // NOTA: Contraseña solo para simulación de validación
+                    simulatedPasswordHash: password.length, 
+                    balance: 1000.00, // Saldo inicial con decimales
+                    creationDate: new Date().toISOString(),
+                };
+
+                await setDoc(userDocRef, userData);
+                showMessage(`¡Registro exitoso para ${username}! Saldo inicial: $1000.00`, 'success');
+                return true;
+
+            } catch (error) {
+                console.error("Error al registrar el usuario en Firestore:", error);
+                showMessage(`Error de registro: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        /**
+         * Simula el inicio de sesión: Carga los datos y cambia a la vista de Dashboard.
+         */
+        async function loginUser(email, password) {
+            if (!db || !userId) return showMessage('Sistema no listo.', 'error');
+
+            try {
+                const userDocRef = doc(db, USERS_COLLECTION_PATH, email);
+                const docSnap = await getDoc(userDocRef);
+
+                if (!docSnap.exists()) {
+                    showMessage('Usuario no encontrado o credenciales incorrectas.', 'error');
+                    return false;
+                }
+                
+                const userData = docSnap.data();
+
+                // Simulación de validación de contraseña
+                if (userData.simulatedPasswordHash !== password.length) {
+                    showMessage('Contraseña incorrecta.', 'error');
+                    return false;
+                }
+
+                // Éxito: Guardamos el email para futuras operaciones y cargamos la vista
+                userEmail = email; 
+                startBalanceListener(email); // 🚨 Iniciar la escucha en tiempo real
+                switchView(true);
+                showMessage(`¡Bienvenido, ${userData.username}!`, 'success');
+                return true;
+
+            } catch (error) {
+                console.error("Error al iniciar sesión y cargar datos:", error);
+                showMessage(`Error de inicio de sesión: ${error.message}`, 'error');
+                return false;
+            }
+        }
+        
+        /**
+         * Simula un cambio en el saldo del usuario (Juego o Depósito).
+         * @param {number} amount - Cantidad a sumar o restar.
+         */
+        async function updateBalance(amount) {
+            if (!db || !userEmail) return showMessage('No hay usuario activo para actualizar.', 'error');
+
+            try {
+                const userDocRef = doc(db, USERS_COLLECTION_PATH, userEmail);
+
+                // Usamos updateDoc para modificar un campo existente
+                // Nota: Firestore permite hacer operaciones atómicas para incrementar/decrementar,
+                // pero aquí hacemos una lectura y escritura simple por simplicidad.
+                
+                const docSnap = await getDoc(userDocRef);
+                if (!docSnap.exists()) return;
+                
+                const currentBalance = docSnap.data().balance || 0;
+                const newBalance = currentBalance + amount;
+
+                if (newBalance < 0) {
+                     return showMessage('Saldo insuficiente para esta operación.', 'error');
+                }
+
+                await updateDoc(userDocRef, {
+                    balance: newBalance,
+                    lastUpdate: new Date().toISOString()
+                });
+
+                // La interfaz se actualizará automáticamente gracias a onSnapshot!
+                if (amount < 0) {
+                     showMessage(`¡Juego simulado! Has apostado $${Math.abs(amount).toFixed(2)}.`, 'info');
+                } else {
+                     showMessage(`¡Depósito simulado exitoso de $${amount.toFixed(2)}!`, 'success');
+                }
+
+            } catch (error) {
+                console.error("Error al actualizar el saldo:", error);
+                showMessage(`Error al actualizar saldo: ${error.message}`, 'error');
+            }
+        }
+        
+        // --- Manejadores de Eventos ---
+
+        logoutBtn.addEventListener('click', async () => {
+            if (unsubscribeBalance) {
+                unsubscribeBalance(); // Detener la escucha de Firestore
+                unsubscribeBalance = null;
+            }
+            userEmail = null;
+            await signOut(auth); // Cerrar sesión de Firebase Auth (anónima)
+            switchView(false); // Volver a la vista de autenticación
+            showMessage("Sesión cerrada correctamente.", 'info');
+        });
+
+        // Manejador de registro
+        registerForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const btn = document.getElementById('register-btn');
+            btn.disabled = true;
+            btn.classList.add('disabled-btn');
+
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            
+            if (password.length < 6) {
+                showMessage('La contraseña debe tener al menos 6 caracteres.', 'error');
+                btn.disabled = false;
+                btn.classList.remove('disabled-btn');
+                return;
+            }
+
+            const success = await registerUser(username, email, password);
+            if (success) {
+                toggleAuthView(); 
+            }
+            btn.disabled = false;
+            btn.classList.remove('disabled-btn');
+        });
+
+        // Manejador de inicio de sesión
+        loginForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const btn = document.getElementById('login-btn');
+            btn.disabled = true;
+            btn.classList.add('disabled-btn');
+
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            await loginUser(email, password);
+            
+            btn.disabled = false;
+            btn.classList.remove('disabled-btn');
+        });
+        
+        // Manejador de simulación de juego: restar $10
+        simulateGameBtn.addEventListener('click', () => {
+            updateBalance(-10);
+        });
+        
+        // Manejador de simulación de depósito: sumar $50
+        simulateDepositBtn.addEventListener('click', () => {
+            updateBalance(50);
+        });
+        
+        // Listener de evento para el enlace de alternar
+        toggleLink.addEventListener('click', toggleAuthView);
+
+        // Iniciar Firebase al cargar el script
+        // Deshabilitar botones inicialmente hasta que Firebase esté listo
+        document.getElementById('login-btn').disabled = true;
+        document.getElementById('register-btn').disabled = true;
+        initializeFirebase();
+
+    </script>
 </body>
 </html>
