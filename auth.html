@@ -472,26 +472,37 @@
         registerForm.addEventListener('submit', async function(event) {
             event.preventDefault();
             const btn = document.getElementById('register-btn');
+            
+            // 1. Deshabilitar inmediatamente el botón y mostrar el estado de carga
             btn.disabled = true;
             btn.classList.add('disabled-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2 mt-1"></i> Registrando...';
 
             const username = document.getElementById('register-username').value;
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
             
-            if (password.length < 6) {
-                showMessage('La contraseña debe tener al menos 6 caracteres.', 'error');
+            try {
+                if (password.length < 6) {
+                    showMessage('La contraseña debe tener al menos 6 caracteres.', 'error');
+                    return; // Detener la función aquí si la validación falla
+                }
+                
+                // 2. Intentar el registro en Firestore
+                const success = await registerUser(username, email, password);
+
+                if (success) {
+                    toggleAuthView(); 
+                }
+            } catch (error) {
+                console.error("Error durante el proceso de registro:", error);
+                showMessage(`Error desconocido: ${error.message}`, 'error');
+            } finally {
+                // 3. Restaurar el botón SIEMPRE al final
                 btn.disabled = false;
                 btn.classList.remove('disabled-btn');
-                return;
+                btn.innerHTML = '<i class="fas fa-user-plus mr-2 mt-1"></i> Registrarse';
             }
-
-            const success = await registerUser(username, email, password);
-            if (success) {
-                toggleAuthView(); 
-            }
-            btn.disabled = false;
-            btn.classList.remove('disabled-btn');
         });
 
         // Manejador de inicio de sesión
