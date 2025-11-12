@@ -415,10 +415,17 @@
         
         async function initializeFirebase() {
             try {
+                // **CRÍTICO: Nueva verificación**
                 if (!Object.keys(firebaseConfig).length) {
                     console.error("Firebase Config no está disponible. Los botones de auth permanecerán deshabilitados.");
-                    showMessage("Error de configuración de Firebase. La app no puede guardar datos.", 'error');
-                    return;
+                    showMessage("Error de configuración de Firebase. La app no puede guardar datos. Recarga la página.", 'error');
+                    
+                    // Asegurarse de que los botones de Auth permanezcan deshabilitados
+                    loginBtn.disabled = true;
+                    loginBtn.classList.add('disabled-btn');
+                    registerBtn.disabled = true;
+                    registerBtn.classList.add('disabled-btn');
+                    return; // Detiene la ejecución si la config falla
                 }
                 
                 const app = initializeApp(firebaseConfig);
@@ -446,11 +453,13 @@
                     }
                 });
 
-                // CRÍTICO: Habilitar botones de autenticación solo después de inicializar
+                // Habilitar botones de autenticación solo después de inicializar
                 loginBtn.disabled = false;
                 loginBtn.classList.remove('disabled-btn');
                 registerBtn.disabled = false;
                 registerBtn.classList.remove('disabled-btn');
+                showMessage("Sistema listo. Puedes iniciar sesión o registrarte.", 'success');
+
 
             } catch (error) {
                 console.error("Error al inicializar o autenticar Firebase:", error);
